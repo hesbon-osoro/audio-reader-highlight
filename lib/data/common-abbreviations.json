@@ -1,0 +1,31 @@
+{
+  "general": {
+    "vs": "versus",
+    "e.g.": "for example",
+    "i.e.": "that is",
+    "etc.": "et cetera",
+    "approx.": "approximately"
+  },
+  "titles": {
+    "Mr.": "Mister",
+    "Mrs.": "Misses",
+    "Ms.": "Miss",
+    "Dr.": "Doctor",
+    "Prof.": "Professor",
+    "Sr.": "Senior",
+    "Jr.": "Junior"
+  },
+  "institutions": {
+    "U.S.": "United States",
+    "U.K.": "United Kingdom",
+    "U.N.": "United Nations",
+    "E.U.": "European Union"
+  },
+  "degrees": {
+    "Ph.D.": "PhD",
+    "M.Sc.": "Master of Science",
+    "B.Sc.": "Bachelor of Science",
+    "M.A.": "Master of Arts",
+    "B.A.": "Bachelor of Arts"
+  }
+}

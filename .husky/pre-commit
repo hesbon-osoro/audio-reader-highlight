@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run lint-staged for staged files (format + eslint)
+pnpm lint-staged || npx lint-staged || yarn lint-staged || npx --no-install lint-staged

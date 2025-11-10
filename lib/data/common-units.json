@@ -1,0 +1,94 @@
+{
+  "m": { "singular": "meter", "plural": "meters" },
+  "km": { "singular": "kilometer", "plural": "kilometers" },
+  "cm": { "singular": "centimeter", "plural": "centimeters" },
+  "mm": { "singular": "millimeter", "plural": "millimeters" },
+  "µm": { "singular": "micrometer", "plural": "micrometers" },
+  "nm": { "singular": "nanometer", "plural": "nanometers" },
+
+  "in": { "singular": "inch", "plural": "inches" },
+  "ft": { "singular": "foot", "plural": "feet" },
+  "yd": { "singular": "yard", "plural": "yards" },
+  "mi": { "singular": "mile", "plural": "miles" },
+
+  "g": { "singular": "gram", "plural": "grams" },
+  "kg": { "singular": "kilogram", "plural": "kilograms" },
+  "mg": { "singular": "milligram", "plural": "milligrams" },
+  "lb": { "singular": "pound", "plural": "pounds" },
+  "oz": { "singular": "ounce", "plural": "ounces" },
+
+  "L": { "singular": "liter", "plural": "liters" },
+  "l": { "singular": "liter", "plural": "liters" },
+  "mL": { "singular": "milliliter", "plural": "milliliters" },
+  "ml": { "singular": "milliliter", "plural": "milliliters" },
+
+  "%": { "singular": "percent", "plural": "percent" },
+
+  "s": { "singular": "second", "plural": "seconds" },
+  "ms": { "singular": "millisecond", "plural": "milliseconds" },
+  "min": { "singular": "minute", "plural": "minutes" },
+  "h": { "singular": "hour", "plural": "hours" },
+
+  "W": { "singular": "watt", "plural": "watts" },
+  "kW": { "singular": "kilowatt", "plural": "kilowatts" },
+  "V": { "singular": "volt", "plural": "volts" },
+  "A": { "singular": "ampere", "plural": "amperes" },
+  "Hz": { "singular": "hertz", "plural": "hertz" },
+  "kHz": { "singular": "kilohertz", "plural": "kilohertz" },
+  "MHz": { "singular": "megahertz", "plural": "megahertz" },
+  "GHz": { "singular": "gigahertz", "plural": "gigahertz" },
+  "N": { "singular": "newton", "plural": "newtons" },
+  "J": { "singular": "joule", "plural": "joules" },
+  "C": { "singular": "coulomb", "plural": "coulombs" },
+  "F": { "singular": "farad", "plural": "farads" },
+  "H": { "singular": "henry", "plural": "henries" },
+  "T": { "singular": "tesla", "plural": "teslas" },
+  "Ω": { "singular": "ohm", "plural": "ohms" },
+  "Wb": { "singular": "weber", "plural": "webers" },
+  "lm": { "singular": "lumen", "plural": "lumens" },
+  "lx": { "singular": "lux", "plural": "lux" },
+  "cd": { "singular": "candela", "plural": "candelas" },
+  "mol": { "singular": "mole", "plural": "moles" },
+  "dB": { "singular": "decibel", "plural": "decibels" },
+  "°C": { "singular": "degree Celsius", "plural": "degrees Celsius" },
+  "°F": { "singular": "degree Fahrenheit", "plural": "degrees Fahrenheit" },
+  "K": { "singular": "kelvin", "plural": "kelvins" },
+  "°": { "singular": "degree", "plural": "degrees" },
+
+  "m²": { "singular": "square meter", "plural": "square meters" },
+  "cm²": { "singular": "square centimeter", "plural": "square centimeters" },
+  "km²": { "singular": "square kilometer", "plural": "square kilometers" },
+  "in²": { "singular": "square inch", "plural": "square inches" },
+  "ft²": { "singular": "square foot", "plural": "square feet" },
+
+  "m³": { "singular": "cubic meter", "plural": "cubic meters" },
+  "cm³": { "singular": "cubic centimeter", "plural": "cubic centimeters" },
+  "km³": { "singular": "cubic kilometer", "plural": "cubic kilometers" },
+
+  "Wh": { "singular": "watt-hour", "plural": "watt-hours" },
+  "kWh": { "singular": "kilowatt-hour", "plural": "kilowatt-hours" },
+  "Ah": { "singular": "ampere-hour", "plural": "ampere-hours" },
+  "mAh": { "singular": "milliampere-hour", "plural": "milliampere-hours" },
+
+  "N·m": { "singular": "newton meter", "plural": "newton meters" },
+  "N*m": { "singular": "newton meter", "plural": "newton meters" },
+
+  "km/h": { "singular": "kilometer per hour", "plural": "kilometers per hour" },
+  "m/s": { "singular": "meter per second", "plural": "meters per second" },
+  "mph": { "singular": "mile per hour", "plural": "miles per hour" },
+  "Pa": { "singular": "pascal", "plural": "pascals" },
+  "kPa": { "singular": "kilopascal", "plural": "kilopascals" },
+  "MPa": { "singular": "megapascal", "plural": "megapascals" },
+  "bar": { "singular": "bar", "plural": "bar" },
+  "mbar": { "singular": "millibar", "plural": "millibars" },
+  "atm": { "singular": "atmosphere", "plural": "atmospheres" },
+  "psi": {
+    "singular": "pound per square inch",
+    "plural": "pounds per square inch"
+  },
+  "mmHg": {
+    "singular": "millimeter of mercury",
+    "plural": "millimeters of mercury"
+  },
+  "torr": { "singular": "torr", "plural": "torr" }
+}

@@ -1,0 +1,86 @@
+{
+  "name": "audio-reader-highlight",
+  "description": "Audio reader with highlight",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "format": "prettier --write .",
+    "start": "next start",
+    "lint": "next lint",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
+  },
+  "author": {
+    "name": "Hesbon Osoro",
+    "email": "hesbonosoro1@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hesbon-osoro/audio-reader-highlight.git"
+  },
+  "homepage": "https://github.com/hesbon-osoro/audio-reader-highlight#readme",
+  "bugs": {
+    "url": "https://github.com/hesbon-osoro/audio-reader-highlight/issues"
+  },
+  "keywords": [
+    "tts",
+    "text-to-speech",
+    "speech-synthesis",
+    "highlight",
+    "react",
+    "nextjs",
+    "accessibility",
+    "units",
+    "currency",
+    "abbreviations"
+  ],
+  "dependencies": {
+    "framer-motion": "^10.18.0",
+    "lucide-react": "^0.454.0",
+    "next": "14.2.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "sonner": "^1.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.8.10",
+    "@types/react": "18.2.24",
+    "eslint": "8.57.0",
+    "eslint-config-next": "14.2.3",
+    "prettier": "3.4.2",
+    "typescript": "5.3.3",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,scss,mdx}": [
+      "prettier --write"
+    ]
+  },
+  "files": [
+    "components",
+    "lib",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "exports": {
+    ".": {
+      "import": "./components/index.ts",
+      "types": "./components/index.ts"
+    },
+    "./components/*": "./components/*"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
+}

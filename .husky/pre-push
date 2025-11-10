@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Block pushes if type/lint/format fail
+yarn run typecheck && yarn run lint && yarn run format:check || exit 1
