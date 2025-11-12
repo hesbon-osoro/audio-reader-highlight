@@ -120,15 +120,14 @@ body::after {
 /* 3D Floating Elements */
 .floating-elements {
   position: fixed;
-  top: 0;
+  top: 80px; /* Start below the fixed header */
   left: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 80px); /* Adjust height to account for header */
   pointer-events: none;
   z-index: -1;
   overflow: hidden;
   perspective: 1000px;
- /* Enhanced 3D floating elements with advanced CSS effects */
 }
 
 .floating-element {
@@ -355,10 +354,10 @@ body::after {
 /* Particle Field for Enhanced 3D Effects */
 .particle-field {
   position: fixed;
-  top: 0;
+  top: 80px; /* Start below the fixed header */
   left: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 80px); /* Adjust height to account for header */
   pointer-events: none;
   z-index: -2;
   overflow: hidden;
@@ -387,19 +386,19 @@ body::after {
 
 @keyframes particleFloat {
   0% {
-    transform: translateY(100vh) translateX(0) scale(0);
+    transform: translateY(calc(100vh - 80px)) translateX(0) scale(0);
     opacity: 0;
   }
   10% {
     opacity: 1;
-    transform: translateY(90vh) translateX(10px) scale(1);
+    transform: translateY(calc(90vh - 80px)) translateX(10px) scale(1);
   }
   90% {
     opacity: 1;
-    transform: translateY(10vh) translateX(-10px) scale(1);
+    transform: translateY(10px) translateX(-10px) scale(1);
   }
   100% {
-    transform: translateY(-10vh) translateX(0) scale(0);
+    transform: translateY(-10px) translateX(0) scale(0);
     opacity: 0;
   }
 }
