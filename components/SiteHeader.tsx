@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 import {
   Play,
   Pause,
@@ -65,7 +66,7 @@ export default function SiteHeader() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img
+          <Image
             src="/images/audio-reader-highlight-circle.png"
             alt="Audio Reader Highlight logo"
             width={32}
