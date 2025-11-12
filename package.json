@@ -44,15 +44,12 @@
     "abbreviations"
   ],
   "dependencies": {
-    "@react-three/drei": "^10.7.6",
-    "@react-three/fiber": "^9.4.0",
     "framer-motion": "^10.18.0",
     "lucide-react": "^0.454.0",
     "next": "14.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "sonner": "^1.5.0",
-    "three": "^0.181.1"
+    "sonner": "^1.5.0"
   },
   "devDependencies": {
     "@types/node": "20.8.10",
