@@ -134,19 +134,19 @@ body::after {
   position: fixed;
   border-radius: 50%;
   background: 
-    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.5) 0%, transparent 50%),
     linear-gradient(135deg, 
-      rgba(59, 130, 246, 0.2) 0%, 
-      rgba(139, 92, 246, 0.15) 50%, 
-      rgba(16, 185, 129, 0.18) 100%);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+      rgba(59, 130, 246, 0.4) 0%, 
+      rgba(139, 92, 246, 0.3) 50%, 
+      rgba(16, 185, 129, 0.35) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 
-    0 20px 60px rgba(59, 130, 246, 0.25),
-    0 8px 24px rgba(139, 92, 246, 0.2),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3),
-    inset 0 -4px 8px rgba(0, 0, 0, 0.2);
+    0 20px 60px rgba(59, 130, 246, 0.4),
+    0 8px 24px rgba(139, 92, 246, 0.35),
+    inset 0 4px 8px rgba(255, 255, 255, 0.4),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.3);
   animation: float3D 18s ease-in-out infinite;
   will-change: transform, opacity, filter;
   transform-style: preserve-3d;
@@ -404,7 +404,7 @@ body::after {
 }
 
 /* Constrain animations to side margins only */
-@media (max-width: 1100px) {
+@media (max-width: 1024px) {
   .floating-element,
   .particle-field {
     display: none; /* Hide on smaller screens where there's no side space */
@@ -412,7 +412,7 @@ body::after {
 }
 
 /* Ensure floating elements stay in margins on larger screens */
-@media (min-width: 1201px) {
+@media (min-width: 1025px) {
   .floating-element:nth-child(odd) {
     /* Left side elements - constrain to left margin */
     max-width: calc((100vw - 960px) / 2 - 40px);

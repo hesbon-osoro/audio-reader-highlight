@@ -217,19 +217,53 @@ export default function SimplifiedAudioReader({
 
   // Keep overlays aligned when the user scrolls/resizes (word only; sentence is range-based and will rerender on next boundary)
   useEffect(() => {
+    let rafId: number;
+    
     const rerender = () => {
-      if (!wordOverlayRef.current) return;
-      ensureOverlays();
-      if (lastWordElRef.current && wordOverlayRef.current) {
-        const r = lastWordElRef.current.getClientRects();
-        renderRects(wordOverlayRef.current, r as any, 'word');
-      }
+      // Cancel any pending animation frame
+      if (rafId) cancelAnimationFrame(rafId);
+      
+      rafId = requestAnimationFrame(() => {
+        if (!wordOverlayRef.current) return;
+        ensureOverlays();
+        
+        // Find the currently highlighted word element
+        const currentHighlight = currentHighlightRef.current;
+        if (currentHighlight && wordOverlayRef.current) {
+          const r = currentHighlight.getClientRects();
+          if (r.length > 0) {
+            renderRects(wordOverlayRef.current, r as any, 'word');
+          }
+        } else if (lastWordElRef.current && wordOverlayRef.current) {
+          // Fallback to lastWordElRef if no current highlight
+          const r = lastWordElRef.current.getClientRects();
+          if (r.length > 0) {
+            renderRects(wordOverlayRef.current, r as any, 'word');
+          }
+        }
+      });
     };
-    window.addEventListener('scroll', rerender, { passive: true });
+    
+    // Immediate scroll update for better tracking
+    const immediateRerender = () => {
+      rerender();
+    };
+    
+    // Use throttled scroll for better performance
+    let scrollTimeout: NodeJS.Timeout;
+    const throttledRerender = () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(rerender, 8); // ~120fps for smoother tracking
+    };
+    
+    window.addEventListener('scroll', immediateRerender, { passive: true });
     window.addEventListener('resize', rerender);
+    
     return () => {
-      window.removeEventListener('scroll', rerender as any);
-      window.removeEventListener('resize', rerender as any);
+      if (rafId) cancelAnimationFrame(rafId);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      window.removeEventListener('scroll', immediateRerender);
+      window.removeEventListener('resize', rerender);
     };
   }, [ensureOverlays, renderRects]);
 
@@ -1066,10 +1100,21 @@ export default function SimplifiedAudioReader({
       // emphasize token via overlay (subtle fill)
       ensureOverlays();
       const rects = tok.el.getClientRects();
-      if (wordOverlayRef.current)
+      if (wordOverlayRef.current && rects.length > 0) {
         renderRects(wordOverlayRef.current, rects as any, 'word');
+      }
       lastWordElRef.current = tok.el;
       currentTokenElRef.current = tok.el;
+      
+      // Force overlay update after a brief delay to handle any layout changes
+      setTimeout(() => {
+        if (wordOverlayRef.current && tok.el) {
+          const updatedRects = tok.el.getClientRects();
+          if (updatedRects.length > 0) {
+            renderRects(wordOverlayRef.current, updatedRects as any, 'word');
+          }
+        }
+      }, 50);
       if (autoScroll && Date.now() > userScrollUntilRef.current) {
         if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
         rafIdRef.current = requestAnimationFrame(() => {
@@ -1175,16 +1220,21 @@ export default function SimplifiedAudioReader({
       utterance.volume = volume;
 
       let lastHighlightTime = 0;
-      const HIGHLIGHT_DEBOUNCE = 40;
+      const HIGHLIGHT_DEBOUNCE = 10; // Reduced for better sync
       boundaryEnabledRef.current = true;
 
       utterance.onboundary = (
         event: SpeechSynthesisEvent & { name?: string; charLength?: number }
       ) => {
         if (!boundaryEnabledRef.current) return;
+        // Type-safe boundary event handling
+        const boundaryEvent = event as SpeechSynthesisEvent & { 
+          name?: string; 
+          charLength?: number; 
+        };
         if (
-          typeof (event as any).name !== 'undefined' &&
-          (event as any).name !== 'word'
+          typeof boundaryEvent.name !== 'undefined' &&
+          boundaryEvent.name !== 'word'
         )
           return;
         const now = Date.now();
@@ -1198,8 +1248,18 @@ export default function SimplifiedAudioReader({
           typeof mapped === 'number'
             ? mapped
             : Math.min(tokenPointerRef.current + 1, toToken - 1);
-        tokenPointerRef.current = tokenIdx;
-        highlightToken(tokenIdx, block.blockId);
+        // Validate token index bounds
+        const validTokenIdx = Math.max(0, Math.min(tokenIdx, toToken - 1));
+        tokenPointerRef.current = validTokenIdx;
+        
+        // Use requestAnimationFrame for smoother highlighting with error handling
+        requestAnimationFrame(() => {
+          try {
+            highlightToken(validTokenIdx, block.blockId);
+          } catch (error) {
+            console.warn('Highlight error:', error);
+          }
+        });
       };
 
       utterance.onstart = () => {
