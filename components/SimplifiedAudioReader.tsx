@@ -26,7 +26,7 @@ export default function SimplifiedAudioReader({
   content,
   title,
 }: SimplifiedAudioReaderProps) {
-  const [showSettings, setShowSettings] = useState(false);
+  const [showControlPanel, setShowControlPanel] = useState(false);
   const [showVolumePopup, setShowVolumePopup] = useState(false);
   const [rate, setRate] = useState(1);
   const [pitch, setPitch] = useState(1);
@@ -87,6 +87,7 @@ export default function SimplifiedAudioReader({
   const wordOverlayRef = useRef<HTMLDivElement | null>(null);
   const lastSentenceElRef = useRef<HTMLElement | null>(null);
   const lastWordElRef = useRef<HTMLElement | null>(null);
+  const volumePopupRef = useRef<HTMLDivElement | null>(null);
   const enableSentenceOverlay = true;
   const useBlockActiveClass = false;
 
@@ -142,12 +143,13 @@ export default function SimplifiedAudioReader({
   // Toggle overlay visibility with playing state
   useEffect(() => {
     ensureOverlays();
-    const show = isPlaying && !isPaused;
+    const show = isPlaying; // Show overlays when playing OR paused (keep highlights visible)
     if (enableSentenceOverlay && sentenceOverlayRef.current)
       sentenceOverlayRef.current.style.display = show ? 'block' : 'none';
     if (wordOverlayRef.current)
       wordOverlayRef.current.style.display = show ? 'block' : 'none';
     if (!show) {
+      // Only clear overlays when completely stopped, not when paused
       if (enableSentenceOverlay) clearOverlay(sentenceOverlayRef.current);
       clearOverlay(wordOverlayRef.current);
     }
@@ -217,11 +219,15 @@ export default function SimplifiedAudioReader({
       d.style.borderRadius = '8px';
       d.style.pointerEvents = 'none';
       if (mode === 'sentence') {
-        d.style.background = 'transparent';
-        d.style.boxShadow = 'inset 0 0 0 1.5px rgba(15,23,42,0.25)';
+        // Soft sentence highlight - no blur to prevent UI shake
+        d.style.background = 'rgba(59, 130, 246, 0.08)';
+        d.style.border = '1px solid rgba(59, 130, 246, 0.15)';
+        d.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.08)';
       } else {
-        d.style.background = 'transparent';
-        d.style.boxShadow = 'inset 0 0 0 2px rgba(15,23,42,0.28)';
+        // Soft word emphasis - no blur to prevent text distortion
+        d.style.background = 'rgba(251, 191, 36, 0.12)';
+        d.style.border = '1px solid rgba(251, 191, 36, 0.2)';
+        d.style.boxShadow = '0 1px 4px rgba(251, 191, 36, 0.1)';
       }
       root.appendChild(d);
     }
@@ -373,6 +379,36 @@ export default function SimplifiedAudioReader({
       window.removeEventListener('scroll', onUserScroll as any);
     };
   }, []);
+
+  // Handle click outside to close popups
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+
+      if (
+        showVolumePopup &&
+        volumePopupRef.current &&
+        !volumePopupRef.current.contains(target as Node)
+      ) {
+        const volumeButton = target?.closest('.volume');
+        if (!volumeButton) {
+          setShowVolumePopup(false);
+        }
+      }
+
+      if (showControlPanel && !target?.closest('.control-panel')) {
+        const settingsButton = target?.closest('.icon-btn');
+        if (!settingsButton) {
+          setShowControlPanel(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showVolumePopup, showControlPanel]);
 
   // Rehydrate tokens when DOM is already tokenized
   const rehydrateTokensFromDom = useCallback(() => {
@@ -1024,7 +1060,9 @@ export default function SimplifiedAudioReader({
         }
         // sentence overlay is rendered from precise ranges in highlightTextAtPosition
       }
-      // emphasize token via overlay
+      // emphasize token via class for golden background
+      tok.el.classList.add('audio-word');
+      // emphasize token via overlay (subtle fill)
       ensureOverlays();
       const rects = tok.el.getClientRects();
       if (wordOverlayRef.current)
@@ -1295,6 +1333,17 @@ export default function SimplifiedAudioReader({
     };
   }, [fullText, handleStart, speakBlock, buildBlocks]);
 
+  // Utility function to manage audio state classes
+  const setAudioState = useCallback(
+    (state: 'playing' | 'paused' | 'stopped') => {
+      document.body.classList.remove('audio-paused');
+      if (state === 'paused') {
+        document.body.classList.add('audio-paused');
+      }
+    },
+    []
+  );
+
   const handlePause = useCallback(() => {
     if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
       boundaryEnabledRef.current = false;
@@ -1304,47 +1353,66 @@ export default function SimplifiedAudioReader({
         cancelAnimationFrame(rafIdRef.current);
         rafIdRef.current = null;
       }
-      // hide overlays while paused so the page is visible
-      clearOverlay(sentenceOverlayRef.current);
-      clearOverlay(wordOverlayRef.current);
-      if (sentenceOverlayRef.current)
-        sentenceOverlayRef.current.style.display = 'none';
-      if (wordOverlayRef.current) wordOverlayRef.current.style.display = 'none';
+      setAudioState('paused');
+      // Keep highlights visible when paused - don't clear overlays
       toast.info('Audio paused', { duration: 1500 });
     }
-  }, []);
+  }, [setAudioState]);
 
   const handleResume = useCallback(() => {
     if (window.speechSynthesis.paused) {
       boundaryEnabledRef.current = true;
       window.speechSynthesis.resume();
       setIsPaused(false);
-      // show overlays again; they will re-render on next tick
-      if (sentenceOverlayRef.current)
-        sentenceOverlayRef.current.style.display = 'block';
-      if (wordOverlayRef.current)
-        wordOverlayRef.current.style.display = 'block';
+      setAudioState('playing');
+      // Overlays will be shown automatically by the useEffect that watches isPlaying
       toast.info('Audio resumed', { duration: 1500 });
     }
-  }, []);
+  }, [setAudioState]);
+
+  // Duplicate applySettingsRealtime removed - using the version above
+
+  useEffect(() => {
+    const handleDoubleClick = (event: MouseEvent) => {
+      // Preserve normal double-click selection unless Alt is held
+      if (!event.altKey) return;
+      const target = event.target as HTMLElement;
+      if (target.closest('.audio-reader-bar')) return;
+      const tokenEl = target.closest('.tts-token') as HTMLElement | null;
+      if (!tokenEl) return;
+      const tokenIdx = tokensRef.current.findIndex(t => t.el === tokenEl);
+      if (tokenIdx === -1) return;
+      const blockId = tokensRef.current[tokenIdx].blockId;
+      const blocks = blocksRef.current.length
+        ? blocksRef.current
+        : buildBlocks();
+      const blkIdx = blocks.findIndex(b => b.blockId === blockId);
+      if (blkIdx === -1) return;
+      window.speechSynthesis.cancel();
+      toast.success('Reading from here', { duration: 1200 });
+      setTimeout(() => speakBlock(blkIdx, 0, tokenIdx), 120);
+    };
+
+    const article = document.querySelector('article');
+    if (article) article.addEventListener('dblclick', handleDoubleClick);
+    return () => {
+      if (article) article.removeEventListener('dblclick', handleDoubleClick);
+    };
+  }, [fullText, handleStart, speakBlock, buildBlocks]);
+
+  // Duplicate functions removed - using the cleaner versions above
 
   const handleStop = useCallback(() => {
     window.speechSynthesis.cancel();
-    boundaryEnabledRef.current = false;
+    removeCurrentHighlight();
+    clearTokenAndBlockHighlights();
     setIsPlaying(false);
     setIsPaused(false);
-    setHighlightRange({ from: 0, to: 0 });
-    setCurrentCharIndex(0);
-    removeCurrentHighlight();
-    if (activeBlockElRef.current) {
-      activeBlockElRef.current.classList.remove('audio-sentence-active');
-      activeBlockElRef.current = null;
-    }
+    setAudioState('stopped');
     if (rafIdRef.current) {
       cancelAnimationFrame(rafIdRef.current);
       rafIdRef.current = null;
     }
-    // clear session snapshot
     sessionActiveRef.current = false;
     sessionTokensRef.current = [];
     sessionBlockTokenRangesRef.current = [];
@@ -1353,12 +1421,75 @@ export default function SimplifiedAudioReader({
       sentenceOverlayRef.current.style.display = 'none';
     if (wordOverlayRef.current) wordOverlayRef.current.style.display = 'none';
     toast.info('Audio stopped', { duration: 1500 });
-  }, [removeCurrentHighlight, clearTokenAndBlockHighlights]);
+  }, [removeCurrentHighlight, clearTokenAndBlockHighlights, setAudioState]);
 
   const handleRestart = useCallback(() => {
     handleStop();
-    setTimeout(() => handleStart(), 100);
+    // Ensure clean restart with proper state reset
+    setTimeout(() => {
+      setIsPaused(false);
+      handleStart();
+    }, 100);
   }, [handleStop, handleStart]);
+
+  // Listen for header control events - placed after all handler functions are defined
+  useEffect(() => {
+    const handleTogglePlay = () => {
+      if (!isPlaying) {
+        handleStart();
+      } else if (isPaused) {
+        handleResume();
+      } else {
+        handlePause();
+      }
+    };
+
+    // Simplified event handlers - no need for wrapper functions
+    const handleStopEvent = handleStop;
+    const handleRestartEvent = handleRestart;
+
+    const handleToggleVolume = () => {
+      setShowVolumePopup(v => !v);
+    };
+
+    const handleToggleSettings = () => {
+      setShowControlPanel(v => !v);
+    };
+
+    // Dispatch state updates to header
+    const updateHeaderState = () => {
+      window.dispatchEvent(
+        new CustomEvent('arh:state', {
+          detail: { playing: isPlaying, paused: isPaused },
+        })
+      );
+    };
+
+    window.addEventListener('arh:toggle-play', handleTogglePlay);
+    window.addEventListener('arh:stop', handleStopEvent);
+    window.addEventListener('arh:restart', handleRestartEvent);
+    window.addEventListener('arh:toggle-volume', handleToggleVolume);
+    window.addEventListener('arh:toggle-settings', handleToggleSettings);
+
+    // Update header state whenever playing/paused state changes
+    updateHeaderState();
+
+    return () => {
+      window.removeEventListener('arh:toggle-play', handleTogglePlay);
+      window.removeEventListener('arh:stop', handleStopEvent);
+      window.removeEventListener('arh:restart', handleRestartEvent);
+      window.removeEventListener('arh:toggle-volume', handleToggleVolume);
+      window.removeEventListener('arh:toggle-settings', handleToggleSettings);
+    };
+  }, [
+    isPlaying,
+    isPaused,
+    handleStart,
+    handleResume,
+    handlePause,
+    handleStop,
+    handleRestart,
+  ]);
 
   const getVolumeIcon = () => {
     if (volume === 0) return VolumeX;
@@ -1368,278 +1499,178 @@ export default function SimplifiedAudioReader({
 
   const VolumeIcon = getVolumeIcon();
 
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = `
-      /* Layout: center the control bar and make it responsive */
-      .audio-reader-bar {
-        position: sticky;
-        top: 8px;
-        width: min(960px, calc(100% - 24px));
-        margin: 12px auto 8px auto;
-        z-index: 10010; /* above overlays */
-        pointer-events: auto;
-      }
-      .audio-reader-bar .bar-inner {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 10px 12px;
-        border-radius: 12px;
-        background: rgba(2, 6, 23, 0.6);
-        -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 12px 32px rgba(2, 6, 23, 0.25), inset 0 0 0 1px rgba(255,255,255,0.06);
-        color: #e2e8f0;
-      }
-      .audio-reader-bar .left,
-      .audio-reader-bar .center,
-      .audio-reader-bar .right {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-      .audio-reader-bar .btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 10px;
-        border-radius: 8px;
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(255,255,255,0.1);
-        color: inherit;
-      }
-      .audio-reader-bar .slider-group {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .audio-reader-bar label { opacity: 0.85; font-size: 12px; }
-      .audio-reader-bar input[type="range"] { max-width: 140px; }
-      @media (max-width: 640px) {
-        .audio-reader-bar .bar-inner { flex-direction: column; align-items: stretch; }
-        .audio-reader-bar .center { width: 100%; justify-content: space-between; }
-        .audio-reader-bar input[type="range"] { max-width: 100px; }
-      }
-
-      /* Center header and constrain reading width */
-      header { display: flex !important; justify-content: center !important; }
-      header > * { width: 100%; max-width: min(1100px, 94vw); }
-      header h1, header h2, header .title { text-align: center; margin-left: auto; margin-right: auto; }
-      main, article { max-width: min(900px, 92vw); margin-left: auto; margin-right: auto; }
-
-      /* Calm block highlight with header main color (#0f172a) */
-      .audio-sentence-active {
-        background: rgba(15, 23, 42, 0.06);
-        outline: 1px solid rgba(15, 23, 42, 0.12); /* outline avoids layout shift */
-        -webkit-backdrop-filter: blur(6px);
-        backdrop-filter: blur(6px);
-        border-radius: 8px;
-        transition: background-color 160ms ease, outline-color 160ms ease;
-      }
-      /* Active word: denser look without layout shift */
-      .audio-word {
-        background: none;
-        color: inherit;
-        border-radius: 4px;
-        padding: 0; /* no extra space to avoid pushing neighbors */
-        box-shadow: inset 0 -0.45em 0 rgba(15, 23, 42, 0.14); /* underline-like fill */
-        transition: box-shadow 160ms ease;
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
+  // CSS styles are now in globals.css - component only manages classes/IDs
 
   return (
-    <div className="audio-reader-bar">
-      <div className="bar-inner">
-        <div className="left">
-          {!isPlaying ? (
-            <button
-              className="btn"
-              onClick={() => handleStart()}
-              aria-label="Play"
-            >
-              <Play size={18} />
-              <span>Play</span>
-            </button>
-          ) : isPaused ? (
-            <button className="btn" onClick={handleResume} aria-label="Resume">
-              <Play size={18} />
-              <span>Resume</span>
-            </button>
-          ) : (
-            <button className="btn" onClick={handlePause} aria-label="Pause">
-              <Pause size={18} />
-              <span>Pause</span>
-            </button>
-          )}
-
-          <button className="btn" onClick={handleStop} aria-label="Stop">
-            <Square size={18} />
-            <span>Stop</span>
-          </button>
-
-          <button className="btn" onClick={handleRestart} aria-label="Restart">
-            <RotateCcw size={18} />
-            <span>Restart</span>
-          </button>
-        </div>
-
-        <div className="center">
-          <div className="slider-group">
-            <label>Speed</label>
-            <input
-              type="range"
-              min={0.5}
-              max={2}
-              step={0.1}
-              value={rate}
-              onChange={e => {
-                setRate(parseFloat(e.target.value));
-                applySettingsRealtime();
-              }}
-            />
-            <span className="value">{rate.toFixed(1)}x</span>
-          </div>
-
-          <div className="slider-group">
-            <label>Pitch</label>
-            <input
-              type="range"
-              min={0.5}
-              max={2}
-              step={0.1}
-              value={pitch}
-              onChange={e => {
-                setPitch(parseFloat(e.target.value));
-                applySettingsRealtime();
-              }}
-            />
-            <span className="value">{pitch.toFixed(1)}</span>
-          </div>
-
-          <div className="slider-group">
-            <label>Auto scroll</label>
-            <button
-              className={`toggle ${autoScroll ? 'on' : ''}`}
-              onClick={() => setAutoScroll(v => !v)}
-            >
-              <MousePointer2 size={16} />
-              <span>{autoScroll ? 'On' : 'Off'}</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="right">
-          <div className="volume">
-            <button
-              className="btn"
-              onClick={() => setShowVolumePopup(v => !v)}
-              aria-label="Volume"
-            >
-              <VolumeIcon size={18} />
-              <span>Volume</span>
-            </button>
-            <AnimatePresence>
-              {showVolumePopup && (
-                <motion.div
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 6 }}
-                  transition={{ duration: 0.15 }}
-                  className="popover"
-                >
-                  <div className="slider-group">
-                    <label>Volume</label>
-                    <input
-                      type="range"
-                      min={0}
-                      max={1}
-                      step={0.05}
-                      value={volume}
-                      onChange={e => {
-                        setVolume(parseFloat(e.target.value));
-                        applySettingsRealtime();
-                      }}
-                    />
-                    <span className="value">{Math.round(volume * 100)}%</span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          <div className="voice">
-            <button
-              className="btn"
-              onClick={() => setShowSettings(true)}
-              aria-label="Settings"
-            >
-              <Settings size={18} />
-              <span>Voice</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
+    <>
+      {/* Volume popup */}
       <AnimatePresence>
-        {showSettings && (
+        {showVolumePopup && (
           <motion.div
-            className="modal-backdrop"
+            ref={volumePopupRef}
+            initial={{ opacity: 0, y: -8, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="volume-popup"
+          >
+            <div className="slider-group">
+              <label>Volume</label>
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.05}
+                value={volume}
+                onChange={e => {
+                  setVolume(parseFloat(e.target.value));
+                  applySettingsRealtime();
+                }}
+              />
+              <span className="value">{Math.round(volume * 100)}%</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Professional Control Panel */}
+      <AnimatePresence>
+        {showControlPanel && (
+          <motion.div
+            className="control-panel-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={() => setShowControlPanel(false)}
           >
             <motion.div
-              className="modal"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 20, opacity: 0 }}
+              className="control-panel"
+              initial={{ y: 20, opacity: 0, scale: 0.95 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: 20, opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              onClick={e => e.stopPropagation()}
             >
-              <div className="modal-header">
-                <h3>Voice & Settings</h3>
+              <div className="control-panel-header">
+                <h3>Audio Controls</h3>
                 <button
-                  className="icon"
-                  onClick={() => setShowSettings(false)}
+                  className="close-btn"
+                  onClick={() => setShowControlPanel(false)}
                   aria-label="Close"
                 >
-                  <X size={18} />
+                  <X size={20} />
                 </button>
               </div>
-              <div className="modal-body">
-                <div className="field">
-                  <label>Voice</label>
-                  <select
-                    value={selectedVoice}
-                    onChange={e => {
-                      setSelectedVoice(e.target.value);
-                      applySettingsRealtime();
-                    }}
-                  >
-                    {voices.map(v => (
-                      <option
-                        key={v.voiceURI}
-                        value={v.voiceURI}
-                      >{`${v.name} (${v.lang})`}</option>
-                    ))}
-                  </select>
+
+              <div className="control-panel-body">
+                <div className="control-section">
+                  <h4>Playback Settings</h4>
+                  <div className="control-grid">
+                    <div className="control-item">
+                      <label>Speed</label>
+                      <div className="slider-container">
+                        <input
+                          type="range"
+                          min={0.5}
+                          max={2}
+                          step={0.1}
+                          value={rate}
+                          onChange={e => {
+                            setRate(parseFloat(e.target.value));
+                            applySettingsRealtime();
+                          }}
+                        />
+                        <span className="value">{rate.toFixed(1)}x</span>
+                      </div>
+                    </div>
+
+                    <div className="control-item">
+                      <label>Pitch</label>
+                      <div className="slider-container">
+                        <input
+                          type="range"
+                          min={0.5}
+                          max={2}
+                          step={0.1}
+                          value={pitch}
+                          onChange={e => {
+                            setPitch(parseFloat(e.target.value));
+                            applySettingsRealtime();
+                          }}
+                        />
+                        <span className="value">{pitch.toFixed(1)}</span>
+                      </div>
+                    </div>
+
+                    <div className="control-item">
+                      <label>Volume</label>
+                      <div className="slider-container">
+                        <input
+                          type="range"
+                          min={0}
+                          max={1}
+                          step={0.05}
+                          value={volume}
+                          onChange={e => {
+                            setVolume(parseFloat(e.target.value));
+                            applySettingsRealtime();
+                          }}
+                        />
+                        <span className="value">
+                          {Math.round(volume * 100)}%
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="hint">
-                  Double-click any word in the content to start reading from
-                  there.
+
+                <div className="control-section">
+                  <h4>Voice Selection</h4>
+                  <div className="voice-selector">
+                    <select
+                      value={selectedVoice}
+                      onChange={e => {
+                        setSelectedVoice(e.target.value);
+                        applySettingsRealtime();
+                      }}
+                    >
+                      {voices.map(v => (
+                        <option
+                          key={v.voiceURI}
+                          value={v.voiceURI}
+                        >{`${v.name} (${v.lang})`}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="control-section">
+                  <h4>Reading Options</h4>
+                  <div className="toggle-container">
+                    <button
+                      className={`professional-toggle ${autoScroll ? 'active' : ''}`}
+                      onClick={() => setAutoScroll(v => !v)}
+                    >
+                      <MousePointer2 size={18} />
+                      <span>Auto Scroll</span>
+                      <div className="toggle-indicator"></div>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="control-section">
+                  <div className="help-text">
+                    <p>
+                      💡 <strong>Tip:</strong> Double-click any word in the
+                      content to start reading from there.
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }

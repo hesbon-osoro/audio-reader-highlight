@@ -1,5 +1,5 @@
+import SimplifiedAudioReader from '@/components/SimplifiedAudioReader';
 import React from 'react';
-import SimplifiedAudioReader from '../components/SimplifiedAudioReader';
 
 const post = {
   slug: 'comfort-zone-paradox-home-is-best',
