@@ -113,7 +113,7 @@ export default function SimplifiedAudioReader({
       sentenceOverlayRef.current = mk('arh-overlay-sentence', 9999);
     if (!wordOverlayRef.current)
       wordOverlayRef.current = mk('arh-overlay-word', 10000);
-  }, []);
+  }, [enableSentenceOverlay]);
 
   // Ensure the post starts immediately below the top bar
   useEffect(() => {
@@ -153,25 +153,7 @@ export default function SimplifiedAudioReader({
       if (enableSentenceOverlay) clearOverlay(sentenceOverlayRef.current);
       clearOverlay(wordOverlayRef.current);
     }
-  }, [isPlaying, isPaused, ensureOverlays]);
-
-  // Keep overlays aligned when the user scrolls/resizes (word only; sentence is range-based and will rerender on next boundary)
-  useEffect(() => {
-    const rerender = () => {
-      if (!wordOverlayRef.current) return;
-      ensureOverlays();
-      if (lastWordElRef.current && wordOverlayRef.current) {
-        const r = lastWordElRef.current.getClientRects();
-        renderRects(wordOverlayRef.current, r as any, 'word');
-      }
-    };
-    window.addEventListener('scroll', rerender, { passive: true });
-    window.addEventListener('resize', rerender);
-    return () => {
-      window.removeEventListener('scroll', rerender as any);
-      window.removeEventListener('resize', rerender as any);
-    };
-  }, [ensureOverlays]);
+  }, [isPlaying, isPaused, ensureOverlays, enableSentenceOverlay]);
 
   const clearOverlay = (root: HTMLDivElement | null) => {
     if (!root) return;
@@ -179,7 +161,7 @@ export default function SimplifiedAudioReader({
   };
 
   type RectLike = Pick<DOMRectReadOnly, 'left' | 'top' | 'width' | 'height'>;
-  const renderRects = (
+  const renderRects = useCallback((
     root: HTMLDivElement,
     rects: DOMRectList | ReadonlyArray<DOMRect | DOMRectReadOnly>,
     mode: 'sentence' | 'word'
@@ -231,7 +213,25 @@ export default function SimplifiedAudioReader({
       }
       root.appendChild(d);
     }
-  };
+  }, []);
+
+  // Keep overlays aligned when the user scrolls/resizes (word only; sentence is range-based and will rerender on next boundary)
+  useEffect(() => {
+    const rerender = () => {
+      if (!wordOverlayRef.current) return;
+      ensureOverlays();
+      if (lastWordElRef.current && wordOverlayRef.current) {
+        const r = lastWordElRef.current.getClientRects();
+        renderRects(wordOverlayRef.current, r as any, 'word');
+      }
+    };
+    window.addEventListener('scroll', rerender, { passive: true });
+    window.addEventListener('resize', rerender);
+    return () => {
+      window.removeEventListener('scroll', rerender as any);
+      window.removeEventListener('resize', rerender as any);
+    };
+  }, [ensureOverlays, renderRects]);
 
   const removeEmojis = (s: string) =>
     s
@@ -472,13 +472,6 @@ export default function SimplifiedAudioReader({
   // use centralized helper via import
 
   useEffect(() => {
-    return () => {
-      window.speechSynthesis.cancel();
-      removeCurrentHighlight();
-    };
-  }, []);
-
-  useEffect(() => {
     const loadVoices = () => {
       const availableVoices = window.speechSynthesis.getVoices();
       if (availableVoices.length > 0) {
@@ -537,6 +530,14 @@ export default function SimplifiedAudioReader({
       sentenceOverlayRef.current.style.display = 'none';
     if (wordOverlayRef.current) wordOverlayRef.current.style.display = 'none';
   }, []);
+
+  // Cleanup effect - now properly placed after removeCurrentHighlight is defined
+  useEffect(() => {
+    return () => {
+      window.speechSynthesis.cancel();
+      removeCurrentHighlight();
+    };
+  }, [removeCurrentHighlight]);
 
   // Build index helper (article only)
   const buildIndex = useCallback(() => {
