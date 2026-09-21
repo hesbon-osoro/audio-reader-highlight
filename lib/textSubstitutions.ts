@@ -17,7 +17,12 @@ export function buildSpeechFromSegment(segment: string): SpeechMap {
     .map(escapeRegex)
     .join('|');
   const codeClass = codeKeys.join('|');
-  const scaleClass = Object.keys(scales).join('');
+  // `scales` keys are lowercase, but financial suffixes are usually written
+  // uppercase ($1M, £2.5B). Accept either case in the character class so the
+  // suffix is consumed instead of being left behind as a stray letter.
+  const scaleClass = Object.keys(scales)
+    .map(k => `${k.toLowerCase()}${k.toUpperCase()}`)
+    .join('');
 
   // number with optional commas and decimals
   const num = '([0-9]+(?:,[0-9]{3})*(?:\\.[0-9]+)?)';
@@ -49,8 +54,12 @@ export function buildSpeechFromSegment(segment: string): SpeechMap {
     },
   });
   // 3) Codes: USD 100, EUR 2.5M
+  // A plain trailing \b rejects the match when a code is followed by
+  // punctuation, because the suffix is a word character. The lookahead
+  // instead asserts only that the amount is not glued to a following word
+  // (so "USD 100abc" is not treated as an amount).
   subs.push({
-    pattern: new RegExp(`\\b(${codeClass})\\s+${num}${scale}\\b`, 'g'),
+    pattern: new RegExp(`\\b(${codeClass})\\s+${num}${scale}(?![\\w])`, 'g'),
     replace: m => {
       const code = m[1] as keyof typeof currencyCodes;
       const amount = m[2];
@@ -116,17 +125,20 @@ export function buildSpeechFromSegment(segment: string): SpeechMap {
     .map(escapeRegex)
     .join('|');
   const baseAlt = prefixableBases.map(escapeRegex).join('|');
+  // The direct-unit branch is tried first so that a multi-character unit which
+  // also decomposes into an SI prefix plus a base (kWh -> kW + h) resolves to
+  // the specific entry instead of being split and leaving the remainder behind.
   const unitPattern = new RegExp(
-    `${num}\\s?(?:(${prefixAlt})(${baseAlt})|(${unitAlt}))(?![\u00A0\w])`,
+    `${num}\\s?(?:(${unitAlt})|(${prefixAlt})(${baseAlt}))(?![\u00A0\w])`,
     'g'
   );
   subs.push({
     pattern: unitPattern,
     replace: m => {
       const rawAmount = m[1];
-      const prefixSym = m[2];
-      const baseSym = m[3];
-      const directUnit = m[4];
+      const directUnit = m[2];
+      const prefixSym = m[3];
+      const baseSym = m[4];
       const val = parseFloat(rawAmount.replace(/,/g, ''));
       if (directUnit) {
         const u = units[directUnit];
