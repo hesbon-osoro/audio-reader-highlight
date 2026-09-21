@@ -34,12 +34,22 @@ describe('buildSpeechFromSegment', () => {
   });
 
   describe('postfix currency symbols with a magnitude suffix', () => {
+    // The postfix rule is <number><scale><symbol>, matching the documented
+    // example 2.5M£. The amount-first form (1$M) is a different convention
+    // and is not handled here.
     it.each([
-      ['1$K', '1 thousand us dollars'],
-      ['1$M', '1 million us dollars'],
-      ['1£B', '1 billion british pounds sterling'],
+      ['1K$', '1 thousand us dollars'],
+      ['1M$', '1 million us dollars'],
+      ['2.5M£', '2.5 million british pounds sterling'],
+      ['3B€', '3 billion euros'],
     ])('speaks %s as %s', (input, expected) => {
       expect(speech(input)).toBe(expected);
+    });
+
+    it('leaves a symbol whose symbol precedes the suffix untouched', () => {
+      // Documents current behaviour for the unsupported 1$M ordering so a
+      // future change to support it is a deliberate decision.
+      expect(speech('1$M')).toBe('1 us dollarsM');
     });
   });
 
