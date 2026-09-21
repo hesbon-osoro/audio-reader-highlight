@@ -54,11 +54,12 @@ export function buildSpeechFromSegment(segment: string): SpeechMap {
     },
   });
   // 3) Codes: USD 100, EUR 2.5M
-  // The trailing \b must not follow the suffix, because a scale letter is a
-  // word character and the alternation would be rejected when a code is
-  // followed by punctuation. It sits before the amount instead.
+  // A plain trailing \b rejects the match when a code is followed by
+  // punctuation, because the suffix is a word character. The lookahead
+  // instead asserts only that the amount is not glued to a following word
+  // (so "USD 100abc" is not treated as an amount).
   subs.push({
-    pattern: new RegExp(`\\b(${codeClass})\\s+${num}${scale}`, 'g'),
+    pattern: new RegExp(`\\b(${codeClass})\\s+${num}${scale}(?![\\w])`, 'g'),
     replace: m => {
       const code = m[1] as keyof typeof currencyCodes;
       const amount = m[2];

@@ -68,6 +68,28 @@ describe('buildSpeechFromSegment', () => {
     it('speaks a code with no suffix', () => {
       expect(speech('USD 100')).toBe('100 us dollars');
     });
+
+    it('speaks a code followed by punctuation', () => {
+      // A plain trailing \b would reject this, since the suffix is a word
+      // character; the lookahead allows punctuation but not a following word.
+      expect(speech('EUR 2.5M.')).toBe('2.5 million euros.');
+    });
+
+    it('does not treat a word glued to the amount as part of it', () => {
+      expect(speech('USD 100abc')).toBe('USD 100abc');
+      expect(speech('USD 100USD')).toBe('USD 100USD');
+    });
+
+    it('does not match a code that is part of a longer token', () => {
+      expect(speech('USDX 100')).toBe('USDX 100');
+      expect(speech('XUSD 100')).toBe('XUSD 100');
+    });
+
+    it('speaks each code in a segment containing several', () => {
+      expect(speech('costs USD 5 USD 10')).toBe(
+        'costs 5 us dollars 10 us dollars'
+      );
+    });
   });
 
   describe('units', () => {
