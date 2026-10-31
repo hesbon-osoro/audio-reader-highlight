@@ -1,9 +1,24 @@
 import './globals.css';
-import { Toaster } from 'sonner';
 import React from 'react';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
+import { Inter, Newsreader } from 'next/font/google';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+
+const sans = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const serif = Newsreader({
+  subsets: ['latin'],
+  variable: '--font-serif',
+  style: ['normal', 'italic'],
+  adjustFontFallback: false,
+});
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#0a0b10' },
+    { media: '(prefers-color-scheme: light)', color: '#f7f6f2' },
+  ],
+};
 
 const siteUrl =
   (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SITE_URL) ||
@@ -16,7 +31,7 @@ export const metadata: Metadata = {
     template: '%s · Audio Reader Highlight',
   },
   description:
-    'Natural TTS with synchronized highlighting for currencies, abbreviations, and units.',
+    'Text-to-speech that reads science, currencies and units naturally, and highlights the exact word being spoken.',
   keywords: [
     'text-to-speech',
     'tts',
@@ -39,7 +54,7 @@ export const metadata: Metadata = {
     url: '/',
     title: 'Audio Reader Highlight',
     description:
-      'Natural TTS with synchronized highlighting for currencies, abbreviations, and units.',
+      'Text-to-speech that reads science, currencies and units naturally, and highlights the exact word being spoken.',
     siteName: 'Audio Reader Highlight',
     images: [
       {
@@ -66,7 +81,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Audio Reader Highlight',
     description:
-      'Natural TTS with synchronized highlighting for currencies, abbreviations, and units.',
+      'Text-to-speech that reads science, currencies and units naturally, and highlights the exact word being spoken.',
     creator: '@hesbon_osoro',
     images: ['/images/audio-reader-highlight_cropped.png'],
   },
@@ -94,52 +109,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${sans.variable} ${serif.variable}`}>
       <body>
-        {/* Enhanced 3D Floating Background Elements */}
-        <div className="floating-elements">
-          <div className="floating-element"></div>
-          <div className="floating-element"></div>
-          <div className="floating-element"></div>
-          <div className="floating-element"></div>
-          <div className="floating-element"></div>
-          <div className="floating-element"></div>
-          <div className="floating-element"></div>
-          <div className="floating-element"></div>
-        </div>
-        
-        {/* Additional particle effects for wide screens */}
-        <div className="particle-field">
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-        </div>
-
         <SiteHeader />
-        <main className="container">{children}</main>
+        <main>{children}</main>
         <SiteFooter />
-        <Toaster
-          richColors
-          position="top-right"
-          expand={true}
-          visibleToasts={5}
-          closeButton={true}
-          toastOptions={{
-            style: {
-              background: 'rgba(15, 23, 42, 0.95)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-            },
-          }}
-        />
       </body>
     </html>
   );

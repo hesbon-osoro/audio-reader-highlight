@@ -1,10 +1,17 @@
 {
   "general": {
+    "vs.": "versus",
     "vs": "versus",
     "e.g.": "for example",
     "i.e.": "that is",
     "etc.": "et cetera",
-    "approx.": "approximately"
+    "cf.": "compare",
+    "viz.": "namely",
+    "ca.": "circa",
+    "resp.": "respectively",
+    "w.r.t.": "with respect to",
+    "a.m.": "A M",
+    "p.m.": "P M"
   },
   "titles": {
     "Mr.": "Mister",
@@ -27,5 +34,21 @@
     "B.Sc.": "Bachelor of Science",
     "M.A.": "Master of Arts",
     "B.A.": "Bachelor of Arts"
+  },
+  "science": {
+    "Fig.": "figure",
+    "Figs.": "figures",
+    "Eq.": "equation",
+    "Eqs.": "equations",
+    "et al.": "and colleagues",
+    "Ref.": "reference",
+    "Refs.": "references",
+    "Vol.": "volume",
+    "pp.": "pages",
+    "Sec.": "section",
+    "Ch.": "chapter",
+    "Tab.": "table",
+    "Exp.": "experiment",
+    "approx.": "approximately"
   }
 }

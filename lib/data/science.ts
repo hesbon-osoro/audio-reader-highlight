@@ -1,0 +1,135 @@
+// Reading rules for scientific and mathematical notation.
+
+export const SUPERSCRIPTS: Record<string, string> = {
+  '⁰': '0',
+  '¹': '1',
+  '²': '2',
+  '³': '3',
+  '⁴': '4',
+  '⁵': '5',
+  '⁶': '6',
+  '⁷': '7',
+  '⁸': '8',
+  '⁹': '9',
+  '⁺': '+',
+  '⁻': '-',
+  ⁿ: 'n',
+};
+
+export const SUBSCRIPTS: Record<string, string> = {
+  '₀': '0',
+  '₁': '1',
+  '₂': '2',
+  '₃': '3',
+  '₄': '4',
+  '₅': '5',
+  '₆': '6',
+  '₇': '7',
+  '₈': '8',
+  '₉': '9',
+};
+
+export const FRACTION_GLYPHS: Record<string, string> = {
+  '½': 'one half',
+  '⅓': 'one third',
+  '⅔': 'two thirds',
+  '¼': 'one quarter',
+  '¾': 'three quarters',
+  '⅕': 'one fifth',
+  '⅛': 'one eighth',
+  '⅜': 'three eighths',
+  '⅝': 'five eighths',
+  '⅞': 'seven eighths',
+};
+
+export const GREEK: Record<string, string> = {
+  α: 'alpha',
+  β: 'beta',
+  γ: 'gamma',
+  δ: 'delta',
+  ε: 'epsilon',
+  ζ: 'zeta',
+  η: 'eta',
+  θ: 'theta',
+  ι: 'iota',
+  κ: 'kappa',
+  λ: 'lambda',
+  μ: 'mu',
+  µ: 'mu',
+  ν: 'nu',
+  ξ: 'xi',
+  ο: 'omicron',
+  π: 'pi',
+  ρ: 'rho',
+  σ: 'sigma',
+  ς: 'sigma',
+  τ: 'tau',
+  υ: 'upsilon',
+  φ: 'phi',
+  χ: 'chi',
+  ψ: 'psi',
+  ω: 'omega',
+  Γ: 'gamma',
+  Δ: 'delta',
+  Θ: 'theta',
+  Λ: 'lambda',
+  Ξ: 'xi',
+  Π: 'pi',
+  Σ: 'sigma',
+  Φ: 'phi',
+  Ψ: 'psi',
+  Ω: 'omega',
+};
+
+// Spoken with surrounding spaces, so they read as separate words.
+export const SYMBOLS: Record<string, string> = {
+  '±': 'plus or minus',
+  '∓': 'minus or plus',
+  '×': 'times',
+  '÷': 'divided by',
+  '=': 'equals',
+  '≈': 'is approximately',
+  '≃': 'is approximately',
+  '≅': 'is congruent to',
+  '≡': 'is equivalent to',
+  '≠': 'is not equal to',
+  '≤': 'is less than or equal to',
+  '≥': 'is greater than or equal to',
+  '≪': 'is much less than',
+  '≫': 'is much greater than',
+  '∝': 'is proportional to',
+  '→': 'yields',
+  '⟶': 'yields',
+  '⇌': 'is in equilibrium with',
+  '⇒': 'implies',
+  '⇔': 'if and only if',
+  '√': 'the square root of',
+  '∛': 'the cube root of',
+  '∞': 'infinity',
+  '∑': 'the sum of',
+  '∏': 'the product of',
+  '∫': 'the integral of',
+  '∂': 'partial',
+  '∇': 'del',
+  '∆': 'delta',
+  '∈': 'is in',
+  '∉': 'is not in',
+  '∀': 'for all',
+  '∃': 'there exists',
+  '∴': 'therefore',
+  '∵': 'because',
+  '‰': 'per mille',
+  '′': 'prime',
+  '″': 'double prime',
+  ℏ: 'h bar',
+  Å: 'angstroms',
+};
+
+export const CHEMICAL_ELEMENTS = new Set(
+  (
+    'H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr ' +
+    'Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb ' +
+    'Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf ' +
+    'Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og'
+  ).split(' ')
+);

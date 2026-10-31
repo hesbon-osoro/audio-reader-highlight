@@ -42,37 +42,49 @@ pnpm add github:hesbon-osoro/audio-reader-highlight
 
 ## Usage
 
+Wrap any content in a `Readable` region and add one `PlayerDock`:
+
 ```tsx
-import { SimplifiedAudioReader } from 'audio-reader-highlight';
+import { PlayerDock, Readable } from 'audio-reader-highlight';
 
 export default function Page() {
-  const title = 'Demo Post';
-  const content = `
-    <p><strong>Currency tests</strong>: Price is $100 and €50.</p>
-    <p><strong>Units</strong>: 3.5 km, 60 km/h, 1 m², 2 m³, 0.5 μm, 1 kΩ.</p>
-  `;
   return (
     <main>
-      <article>
-        <h1>{title}</h1>
-        <SimplifiedAudioReader title={title} content={content} />
-      </article>
+      <Readable id="post" label="Demo Post">
+        <p>Avogadro’s number is 6.022×10²³ mol⁻¹, and water is H₂O.</p>
+        <p>Price is $100 and €50; it is 3.5 km away at 60 km/h.</p>
+      </Readable>
+      <PlayerDock defaultRegion="post" />
     </main>
   );
 }
 ```
 
-## Component API
+Click any word in a region to start reading from it. Space plays and pauses, ← and → move between sentences, Escape stops.
 
-- `title: string`
-- `content: string` (HTML string; images with `alt` will be read as "[Image: ...]")
+## API
 
-## Notes
+- `Readable` (`id`, `label`, `className`): a region the reader can speak. Text is read straight from the DOM; nothing is wrapped or rewritten.
+- `PlayerDock` (`defaultRegion`): play/pause, sentence skip, speed, voice, pitch and volume.
+- `useReader()`: the shared reader and its live state, for your own controls (`reader.toggle(id)`, `reader.play(id, offset)`, `reader.skip(±1)`, `reader.configure({ rate })`).
+- `buildSpeechFromSegment(text)`: the speech normaliser on its own. It returns `{ speech, map, ends }`, mapping every spoken character back to its source span.
 
-- Uses Web Speech Synthesis; ensure the browser supports it.
-- Tokenizer groups: currencies (prefix/postfix/multi-symbol), abbreviations (U.S., i.e., etc.), number+unit (including `km/h`, `m²`, `m³`).
-- Data sources in `lib/data/*` provide currencies, abbreviations, and units. Update JSON to expand coverage.
-- SSR-safe: text extraction guards against `document` undefined.
+## How the highlight stays on the word
+
+- Each sentence is one utterance. Every word boundary the voice reports is mapped through the speech map to the exact source characters, then painted with the CSS Custom Highlight API. The page's DOM is never changed.
+- When a substitution expands one expression into several words ("6.02×10²³" → "6.02 times ten to the power of 23"), the whole expression stays highlighted while it is spoken.
+- Some voices never report word boundaries (Google’s network voices in Chrome, most Android voices). For those, the reader follows a timing estimate that recalibrates to the voice after every sentence. The dock shows **Word-exact** or **Estimated**, so you know which mode you are in.
+- Pause restarts at the current word on resume, because `speechSynthesis.pause()` is unreliable on Android and with network voices.
+
+## What it reads
+
+- Scientific notation: `6.022×10²³`, `1.6 x 10^-19 C`, `3e8 m/s`, `10⁻⁹ m`
+- Chemistry: `H₂O`, `CO2`, `2H₂O`, `NaCl`, `SO₄²⁻` (only real elements, so words like `NO` and `OK` are left alone)
+- Equations and symbols: `E = mc²`, `x₁`, `≤`, `±`, `≈`, `√`, `∞`, `→`, Greek letters
+- Fractions, ranges and signs: `½`, `2¾`, `3/4`, `10–20 km`, `−273.15 °C`, `~5 kg`
+- Currencies, units with SI prefixes, and abbreviations (`Dr.`, `e.g.`, `Fig.`, `et al.`, `No. 7`)
+
+Rules live in `lib/textSubstitutions.ts`, and the data in `lib/data/*`. The **Pronunciation lab** on the demo page has one card per rule, with a "Spoken as" view of exactly what the voice is given.
 
 ## Public datasets (API)
 
