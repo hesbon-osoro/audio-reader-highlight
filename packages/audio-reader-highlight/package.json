@@ -1,0 +1,86 @@
+{
+  "name": "audio-reader-highlight",
+  "version": "2.0.0",
+  "description": "Read-aloud for the web that highlights the exact word being spoken and reads science, units, currencies and abbreviations naturally.",
+  "license": "MIT",
+  "author": {
+    "name": "Hesbon Osoro",
+    "email": "osoro@hesbon.dev",
+    "url": "https://hesbon.dev"
+  },
+  "homepage": "https://github.com/hesbon-osoro/audio-reader-highlight#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hesbon-osoro/audio-reader-highlight.git",
+    "directory": "packages/audio-reader-highlight"
+  },
+  "bugs": {
+    "url": "https://github.com/hesbon-osoro/audio-reader-highlight/issues"
+  },
+  "keywords": [
+    "tts",
+    "text-to-speech",
+    "read-aloud",
+    "speech-synthesis",
+    "highlight",
+    "accessibility",
+    "a11y",
+    "dyslexia",
+    "react",
+    "scientific-notation",
+    "units",
+    "currency"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./react": {
+      "import": {
+        "types": "./dist/react.d.ts",
+        "default": "./dist/react.js"
+      },
+      "require": {
+        "types": "./dist/react.d.cts",
+        "default": "./dist/react.cjs"
+      }
+    },
+    "./styles.css": "./dist/styles.css",
+    "./data/*": "./dist/data/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=17"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

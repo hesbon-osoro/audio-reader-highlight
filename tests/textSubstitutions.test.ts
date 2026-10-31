@@ -1,4 +1,4 @@
-import { buildSpeechFromSegment } from '../lib/textSubstitutions';
+import { buildSpeechFromSegment } from '../packages/audio-reader-highlight/src/textSubstitutions';
 
 /**
  * Reads a phrase the way the reader would speak it.

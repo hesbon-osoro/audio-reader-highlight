@@ -4,55 +4,32 @@ Natural text-to-speech with synchronized sentence/word highlighting. Reads curre
 
 ## Features
 
-- Word-by-word and sentence overlays with no layout shift.
-- Data-driven reading for currencies, abbreviations, and units.
-- SI prefixes, composite units (e.g., km/h, m², m³), and postfix currencies (e.g., 100$).
-- Built with React and Next.js 14; uses the Web Speech Synthesis API.
+- The exact word being spoken is highlighted on a padded pill that slides behind the text, so nothing reflows.
+- Click or tap any word to read from there; pause, resume, skip and stop work the same on desktop and mobile.
+- Reads science (6.022×10²³, H₂O, E = mc², λ), currencies, units and abbreviations the way a person would.
+- A dependency-free core for any framework, React bindings, and a themeable light/dark stylesheet.
 
-## Installation
+## The package
 
-Using npm:
+The reusable reader lives in [`packages/audio-reader-highlight`](./packages/audio-reader-highlight) and is published
+to npm as [`audio-reader-highlight`](https://www.npmjs.com/package/audio-reader-highlight). Its
+[README](./packages/audio-reader-highlight/README.md) covers installation, React and plain-DOM usage, theming, and
+using the text normaliser in native apps.
 
 ```bash
 npm install audio-reader-highlight
 ```
 
-Using yarn:
-
-```bash
-yarn add audio-reader-highlight
-```
-
-Using pnpm:
-
-```bash
-pnpm add audio-reader-highlight
-```
-
-Install directly from GitHub:
-
-```bash
-# npm
-npm install github:hesbon-osoro/audio-reader-highlight
-# yarn
-yarn add github:hesbon-osoro/audio-reader-highlight
-# pnpm
-pnpm add github:hesbon-osoro/audio-reader-highlight
-```
-
-## Usage
-
-Wrap any content in a `Readable` region and add one `PlayerDock`:
-
 ```tsx
-import { PlayerDock, Readable } from 'audio-reader-highlight';
+import { PlayerDock, Readable } from 'audio-reader-highlight/react';
+import 'audio-reader-highlight/styles.css';
 
 export default function Page() {
   return (
     <main>
       <Readable id="post" label="Demo Post">
+        <h1>Units and chemistry</h1>
         <p>Avogadro’s number is 6.022×10²³ mol⁻¹, and water is H₂O.</p>
-        <p>Price is $100 and €50; it is 3.5 km away at 60 km/h.</p>
       </Readable>
       <PlayerDock defaultRegion="post" />
     </main>
@@ -60,14 +37,14 @@ export default function Page() {
 }
 ```
 
-Click any word in a region to start reading from it. Space plays and pauses, ← and → move between sentences, Escape stops.
+Space plays and pauses, ← and → move between sentences, Escape stops.
 
-## API
+## This repository
 
-- `Readable` (`id`, `label`, `className`): a region the reader can speak. Text is read straight from the DOM; nothing is wrapped or rewritten.
-- `PlayerDock` (`defaultRegion`): play/pause, sentence skip, speed, voice, pitch and volume.
-- `useReader()`: the shared reader and its live state, for your own controls (`reader.toggle(id)`, `reader.play(id, offset)`, `reader.skip(±1)`, `reader.configure({ rate })`).
-- `buildSpeechFromSegment(text)`: the speech normaliser on its own. It returns `{ speech, map, ends }`, mapping every spoken character back to its source span.
+- `packages/audio-reader-highlight`: the npm package (build with `yarn build:package`).
+- `app`, `components`: the demo site, which imports the package from source so the two never drift apart. It is an
+  installable web app that also works offline.
+- `tests`: unit tests for the normaliser and the sentence and word helpers (`yarn test`).
 
 ## How the highlight stays on the word
 
@@ -84,7 +61,7 @@ Click any word in a region to start reading from it. Space plays and pauses, ←
 - Fractions, ranges and signs: `½`, `2¾`, `3/4`, `10–20 km`, `−273.15 °C`, `~5 kg`
 - Currencies, units with SI prefixes, and abbreviations (`Dr.`, `e.g.`, `Fig.`, `et al.`, `No. 7`)
 
-Rules live in `lib/textSubstitutions.ts`, and the data in `lib/data/*`. The **Pronunciation lab** on the demo page has one card per rule, with a "Spoken as" view of exactly what the voice is given.
+Rules live in `packages/audio-reader-highlight/src/textSubstitutions.ts`, and the data in `packages/audio-reader-highlight/src/data/*`. The **Pronunciation lab** on the demo page has one card per rule, with a "Spoken as" view of exactly what the voice is given.
 
 ## Public datasets (API)
 
@@ -98,9 +75,9 @@ They return JSON with cache headers and CORS enabled (`Access-Control-Allow-Orig
 
 Direct JSON files in the repo:
 
-- `lib/data/common-units.json`
-- `lib/data/common-currency.json`
-- `lib/data/common-abbreviations.json`
+- `packages/audio-reader-highlight/src/data/common-units.json`
+- `packages/audio-reader-highlight/src/data/common-currency.json`
+- `packages/audio-reader-highlight/src/data/common-abbreviations.json`
 
 ## Contributing
 
@@ -108,11 +85,12 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 
-MIT © 2025 Hesbon Osoro <hesbonosoro1@gmail.com>
+MIT © 2025 Hesbon Osoro
 
 ## Author
 
 Hesbon Osoro — available for contribution and crafting software solutions.
 
-- Email: hesbonosoro1@gmail.com
+- Website: https://hesbon.dev
+- Email: osoro@hesbon.dev
 - GitHub: https://github.com/hesbon-osoro

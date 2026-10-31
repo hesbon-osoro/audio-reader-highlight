@@ -1,17 +1,25 @@
 import Image from 'next/image';
 import { Github } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 export default function SiteHeader() {
   return (
     <header className="site-header">
       <div className="wrap site-header-inner">
         <a href="/" className="brand">
-          <Image src="/images/audio-reader-highlight-circle.png" alt="" width={30} height={30} priority />
+          <Image
+            src="/images/audio-reader-highlight-circle.png"
+            alt=""
+            width={30}
+            height={30}
+            priority
+          />
           <span>Audio Reader Highlight</span>
         </a>
         <nav aria-label="Primary">
-          <a href="#article">Essay</a>
+          <a href="#essay">Essay</a>
           <a href="#lab">Lab</a>
+          <a href="#install">Install</a>
           <a
             href="https://github.com/hesbon-osoro/audio-reader-highlight"
             target="_blank"
@@ -21,6 +29,7 @@ export default function SiteHeader() {
           >
             <Github size={18} />
           </a>
+          <ThemeToggle />
         </nav>
       </div>
     </header>

@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
+import abbreviations from 'audio-reader-highlight/data/common-abbreviations.json';
 
 export async function GET() {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const abbreviations = require('../../../lib/data/common-abbreviations.json');
   return NextResponse.json(abbreviations, {
     headers: {
       'Cache-Control':

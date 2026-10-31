@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
+import units from 'audio-reader-highlight/data/common-units.json';
 
 export async function GET() {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const units = require('../../../lib/data/common-units.json');
   return NextResponse.json(units, {
     headers: {
       'Cache-Control':

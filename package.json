@@ -1,6 +1,6 @@
 {
-  "name": "audio-reader-highlight",
-  "description": "Audio reader with highlight",
+  "name": "audio-reader-highlight-site",
+  "description": "Demo site for the audio-reader-highlight package",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -17,11 +17,13 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build:package": "cd packages/audio-reader-highlight && tsup"
   },
   "author": {
     "name": "Hesbon Osoro",
-    "email": "hesbonosoro1@gmail.com"
+    "email": "osoro@hesbon.dev",
+    "url": "https://hesbon.dev"
   },
   "license": "MIT",
   "repository": {
@@ -65,6 +67,7 @@
     "lint-staged": "^15.2.10",
     "prettier": "3.4.2",
     "ts-jest": "^29.4.12",
+    "tsup": "8.3.5",
     "typescript": "5.3.3"
   },
   "lint-staged": {
@@ -75,23 +78,5 @@
     "*.{json,md,css,scss,mdx}": [
       "prettier --write --ignore-unknown"
     ]
-  },
-  "files": [
-    "components",
-    "lib",
-    "README.md",
-    "LICENSE",
-    "package.json"
-  ],
-  "exports": {
-    ".": {
-      "import": "./components/index.ts",
-      "types": "./components/index.ts"
-    },
-    "./components/*": "./components/*"
-  },
-  "sideEffects": false,
-  "publishConfig": {
-    "access": "public"
   }
 }
