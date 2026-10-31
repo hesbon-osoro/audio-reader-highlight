@@ -10,15 +10,14 @@ const json: Record<
   Record<string, string>
 > = require('./common-abbreviations.json');
 
-function makeDotWordBoundary(key: string): AbbrevItem {
+function makeDotWordBoundary(key: string, value: string): AbbrevItem {
   // Keys that include periods (e.g., "e.g.", "i.e.", "U.S.")
   // Preserve optional trailing punctuation , ; :
   const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const pattern = new RegExp(`\\b${escaped}([,;:]?)`, 'g');
   return {
     pattern,
-    replace: m =>
-      `${json.general?.[key] || json.titles?.[key] || json.institutions?.[key] || json.degrees?.[key] || key}${m[1] || ''}`,
+    replace: m => `${value}${m[1] || ''}`,
   };
 }
 
@@ -36,12 +35,16 @@ function makeWord(
   };
 }
 
-const list: AbbrevItem[] = [];
-for (const [group, entries] of Object.entries(json)) {
-  for (const [k, v] of Object.entries(entries)) {
-    if (k.includes('.')) list.push(makeDotWordBoundary(k));
-    else list.push(makeWord(k, v));
-  }
-}
+// Dotted forms first, longest first, so "vs." wins over "vs" and "Figs."
+// over "Fig.".
+const entries = Object.values(json)
+  .flatMap(group => Object.entries(group))
+  .sort(
+    ([a], [b]) =>
+      Number(b.includes('.')) - Number(a.includes('.')) || b.length - a.length
+  );
+const list: AbbrevItem[] = entries.map(([k, v]) =>
+  k.includes('.') ? makeDotWordBoundary(k, v) : makeWord(k, v)
+);
 
 export const commonAbbreviations: AbbrevItem[] = list;
