@@ -1,7 +1,7 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
-import { getReader, type ReaderState } from './engine';
+import { getReader, type ReaderState } from 'audio-reader-highlight';
 
 const serverState: ReaderState = {
   status: 'idle',

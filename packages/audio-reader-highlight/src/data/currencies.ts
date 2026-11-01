@@ -1,15 +1,14 @@
+import currencyJson from './common-currency.json';
+
 // Auto-build currency maps from JSON data
 // JSON schema: { [code]: { symbol: string, name_plural: string, ... } }
 // Note: We lowercase unit names for speech.
 // Multi-character symbols (e.g., "CA$", "HK$", "NT$", "R$") are supported.
 // Ambiguity: "$" is mapped to US dollars by default; country-prefixed variants (e.g., "CA$") disambiguate others.
-// To extend, edit lib/data/common-currency.json.
+// To extend, edit src/data/common-currency.json.
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const allCurrencies: Record<
-  string,
-  { symbol: string; name_plural: string }
-> = require('./common-currency.json');
+const allCurrencies: Record<string, { symbol: string; name_plural: string }> =
+  currencyJson;
 
 export const currencyCodes: Record<string, string> = {};
 export const currencySymbols: Record<string, string> = {};

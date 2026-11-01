@@ -12,6 +12,7 @@ export type SpeechMap = { speech: string; map: number[]; ends: number[] };
 
 import { currencySymbols, currencyCodes, scales } from './data/currencies';
 import { commonAbbreviations } from './data/abbreviations';
+import unitsJson from './data/common-units.json';
 import {
   CHEMICAL_ELEMENTS,
   FRACTION_GLYPHS,
@@ -27,11 +28,7 @@ function escapeRegex(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const units: Record<
-  string,
-  { singular: string; plural: string }
-> = require('./data/common-units.json');
+const units: Record<string, { singular: string; plural: string }> = unitsJson;
 
 const siPrefixes: Record<string, string> = {
   Y: 'yotta',
@@ -83,12 +80,10 @@ const SUB_DIGITS = `[${Object.keys(SUBSCRIPTS).join('')}]`;
 // An exponent written with a caret (^-19, ^(n)) or in superscript (⁻¹⁹).
 const EXP = `(?:\\^\\(?([-+−]?\\w+)\\)?|(${SUP}+))`;
 
-const fromSuper = (s: string) =>
-  [...s].map(c => SUPERSCRIPTS[c] ?? c).join('');
+const fromSuper = (s: string) => [...s].map(c => SUPERSCRIPTS[c] ?? c).join('');
 const fromSub = (s: string) => [...s].map(c => SUBSCRIPTS[c] ?? c).join('');
 
-const exponent = (e: string) =>
-  e.replace(/^[−-]/, 'minus ').replace(/^\+/, '');
+const exponent = (e: string) => e.replace(/^[−-]/, 'minus ').replace(/^\+/, '');
 
 /** x² → "squared", x⁻¹⁹ → "to the power of minus 19". */
 function power(exp: string) {
@@ -202,10 +197,7 @@ function buildSubs(): Sub[] {
     },
     // E-notation: 1.6e-19, 3e8 m/s
     {
-      pattern: new RegExp(
-        `${NUM_START}${NUM}[eE]([-+]?\\d+)${UNIT_TAIL}`,
-        'u'
-      ),
+      pattern: new RegExp(`${NUM_START}${NUM}[eE]([-+]?\\d+)${UNIT_TAIL}`, 'u'),
       replace: m => `${m[1]} times ${tenTo(m[2])}${unitTail(m[3])}`,
     },
     // Powers of ten on their own: 10⁻³, 10^6 m

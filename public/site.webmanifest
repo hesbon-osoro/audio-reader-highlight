@@ -1,19 +1,36 @@
 {
-  "name": "",
-  "short_name": "",
+  "name": "Audio Reader Highlight",
+  "short_name": "Read Aloud",
+  "description": "Text-to-speech that highlights the exact word being spoken.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#0a0b10",
+  "background_color": "#0a0b10",
+  "categories": [
+    "accessibility",
+    "education",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
-  ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  ]
 }

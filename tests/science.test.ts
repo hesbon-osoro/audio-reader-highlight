@@ -1,4 +1,4 @@
-import { buildSpeechFromSegment } from '../lib/textSubstitutions';
+import { buildSpeechFromSegment } from '../packages/audio-reader-highlight/src/textSubstitutions';
 
 const speech = (input: string): string => buildSpeechFromSegment(input).speech;
 
@@ -22,9 +22,12 @@ describe('scientific reading', () => {
     expect(speech(input)).toBe(expected);
   });
 
-  it.each(['NO', 'OK', 'COVID-19', 'MP3', 'He said No.'])('leaves %s alone', input => {
-    expect(speech(input)).toBe(input);
-  });
+  it.each(['NO', 'OK', 'COVID-19', 'MP3', 'He said No.'])(
+    'leaves %s alone',
+    input => {
+      expect(speech(input)).toBe(input);
+    }
+  );
 
   it.each([
     ['E = mc²', 'E equals mc squared'],

@@ -3,8 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { AudioLines, ChevronDown, Pause, Play } from 'lucide-react';
 import { useState } from 'react';
-import Readable from '@/components/reader/Readable';
-import { useReader } from '@/lib/reader/useReader';
+import { Readable, useReader } from 'audio-reader-highlight/react';
 import type { LabUnit } from '@/lib/data/lab';
 
 /** One reading rule: a sample, a play button, and what the reader says. */
@@ -29,7 +28,11 @@ export default function LabCard({ unit, n }: { unit: LabUnit; n: number }) {
           onClick={() => reader?.toggle(id)}
           aria-label={`${playing ? 'Pause' : 'Play'} ${unit.title}`}
         >
-          {playing ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
+          {playing ? (
+            <Pause size={16} fill="currentColor" />
+          ) : (
+            <Play size={16} fill="currentColor" />
+          )}
         </button>
       </header>
 

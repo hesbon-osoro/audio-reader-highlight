@@ -1,14 +1,12 @@
+import abbreviationsJson from './common-abbreviations.json';
+
 // Abbreviation replacements for natural reading. Built from JSON.
 export type AbbrevItem = {
   pattern: RegExp;
   replace: (m: RegExpExecArray) => string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const json: Record<
-  string,
-  Record<string, string>
-> = require('./common-abbreviations.json');
+const json: Record<string, Record<string, string>> = abbreviationsJson;
 
 function makeDotWordBoundary(key: string, value: string): AbbrevItem {
   // Keys that include periods (e.g., "e.g.", "i.e.", "U.S.")

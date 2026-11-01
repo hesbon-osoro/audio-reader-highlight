@@ -1,9 +1,12 @@
+import 'audio-reader-highlight/styles.css';
 import './globals.css';
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import { Inter, Newsreader } from 'next/font/google';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import { themeScript } from '@/components/ThemeToggle';
+import RegisterSW from '@/components/RegisterSW';
 
 const sans = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const serif = Newsreader({
@@ -43,7 +46,7 @@ export const metadata: Metadata = {
     'units',
     'currencies',
   ],
-  authors: [{ name: 'Hesbon Osoro', url: 'https://github.com/hesbon-osoro' }],
+  authors: [{ name: 'Hesbon Osoro', url: 'https://hesbon.dev' }],
   creator: 'Hesbon Osoro',
   publisher: 'Hesbon Osoro',
   alternates: {
@@ -109,11 +112,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable}`}>
+    <html
+      lang="en"
+      className={`${sans.variable} ${serif.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter />
+        <RegisterSW />
       </body>
     </html>
   );

@@ -15,7 +15,14 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "audio-reader-highlight": [
+        "./packages/audio-reader-highlight/src/index.ts"
+      ],
+      "audio-reader-highlight/react": [
+        "./packages/audio-reader-highlight/src/react/index.ts"
+      ],
+      "audio-reader-highlight/*": ["./packages/audio-reader-highlight/src/*"]
     },
     "plugins": [
       {
@@ -24,5 +31,5 @@
     ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "packages/*/dist"]
 }

@@ -30,16 +30,13 @@ Thanks for your interest in contributing! Please follow the guide below to propo
 
 ## Component API Docs
 
-- Public API is exported via `components/index.ts`.
-- If you add new props or behavior, update the README Component API and add example cases in the blog content.
+- The public API is what `packages/audio-reader-highlight/src/index.ts` (core) and `src/react/index.ts` (React) export.
+- If you add new options or behaviour, update the package README.
 
 ## Publishing
 
-- This repo is currently marked `"private": true` in `package.json`. To publish:
-  1. Remove `private` or set it to `false`.
-  2. Ensure `exports` points to built files (e.g., `dist/index.js`) and type defs.
-  3. Consider adding a build step (tsup/tsup-node/tsc) to output ESM and types.
-  4. `npm publish --access public`.
+1. Bump `version` in `packages/audio-reader-highlight/package.json`.
+2. `cd packages/audio-reader-highlight && npm publish` (the build runs first through `prepublishOnly`).
 
 ## Code of Conduct
 
@@ -48,4 +45,4 @@ Thanks for your interest in contributing! Please follow the guide below to propo
 
 ## Author & Maintainer
 
-- Hesbon Osoro <hesbonosoro1@gmail.com> — available for contribution and crafting software solutions.
+- Hesbon Osoro <osoro@hesbon.dev> (https://hesbon.dev) — available for contribution and crafting software solutions.

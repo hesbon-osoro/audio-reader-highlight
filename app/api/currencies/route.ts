@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
+import currencies from 'audio-reader-highlight/data/common-currency.json';
 
 export async function GET() {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const currencies = require('../../../lib/data/common-currency.json');
   return NextResponse.json(currencies, {
     headers: {
       'Cache-Control':

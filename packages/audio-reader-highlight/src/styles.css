@@ -1,0 +1,497 @@
+/*
+ * audio-reader-highlight: highlight, word pill and player styles.
+ *
+ * Theme it by setting the --arh-* custom properties (see README). Defaults
+ * follow the system colour scheme and an explicit data-theme="light|dark"
+ * on <html>.
+ */
+
+:where(:root) {
+  --arh-ink: #17171c;
+  --arh-ink-2: #4a4a52;
+  --arh-ink-3: #85848a;
+  --arh-line: rgba(20, 20, 30, 0.09);
+  --arh-line-2: rgba(20, 20, 30, 0.16);
+  --arh-surface-2: rgba(20, 20, 30, 0.05);
+  --arh-accent: #4f5fe0;
+  --arh-accent-2: #0c9e88;
+  --arh-accent-ink: #ffffff;
+  --arh-glow: rgba(79, 95, 224, 0.25);
+  --arh-sentence: rgba(79, 95, 224, 0.09);
+  --arh-word: #dfe3ff;
+  --arh-word-ink: #1a2280;
+  --arh-dock: rgba(255, 255, 255, 0.86);
+  --arh-font-display: Georgia, 'Times New Roman', serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :where(:root:not([data-theme='light'])) {
+    --arh-ink: #ecebe8;
+    --arh-ink-2: #b5b4b0;
+    --arh-ink-3: #7d7c79;
+    --arh-line: rgba(255, 255, 255, 0.08);
+    --arh-line-2: rgba(255, 255, 255, 0.14);
+    --arh-surface-2: rgba(255, 255, 255, 0.06);
+    --arh-accent: #8b9cff;
+    --arh-accent-2: #5ee6d0;
+    --arh-accent-ink: #0a0b10;
+    --arh-glow: rgba(139, 156, 255, 0.35);
+    --arh-sentence: rgba(139, 156, 255, 0.12);
+    --arh-word: #2c3470;
+    --arh-word-ink: #ffffff;
+    --arh-dock: rgba(18, 20, 28, 0.82);
+  }
+}
+
+:where(:root[data-theme='dark']) {
+  --arh-ink: #ecebe8;
+  --arh-ink-2: #b5b4b0;
+  --arh-ink-3: #7d7c79;
+  --arh-line: rgba(255, 255, 255, 0.08);
+  --arh-line-2: rgba(255, 255, 255, 0.14);
+  --arh-surface-2: rgba(255, 255, 255, 0.06);
+  --arh-accent: #8b9cff;
+  --arh-accent-2: #5ee6d0;
+  --arh-accent-ink: #0a0b10;
+  --arh-glow: rgba(139, 156, 255, 0.35);
+  --arh-sentence: rgba(139, 156, 255, 0.12);
+  --arh-word: #2c3470;
+  --arh-word-ink: #ffffff;
+  --arh-dock: rgba(18, 20, 28, 0.82);
+}
+
+/* ---- reading highlights -------------------------------------------------- */
+
+::highlight(tts-sentence) {
+  background-color: var(--arh-sentence);
+}
+
+/* The word's background is the pill below; the highlight only recolours it. */
+::highlight(tts-word) {
+  color: var(--arh-word-ink);
+}
+
+.arh-pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  border-radius: 0.45em;
+  background: var(--arh-word);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--arh-accent) 28%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, width;
+  transition:
+    transform 0.14s cubic-bezier(0.2, 0.8, 0.2, 1),
+    width 0.14s cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 0.14s,
+    opacity 0.2s;
+}
+
+.arh-pill[data-on='true'] {
+  opacity: 1;
+}
+
+.arh-pill[data-jump] {
+  transition: opacity 0.2s;
+}
+
+/* Without the Highlight API the text keeps its colour, so the pill stays light. */
+.arh-pill[data-soft] {
+  background: color-mix(in srgb, var(--arh-word) 55%, transparent);
+}
+
+.arh-overlay {
+  position: absolute;
+  inset: 0 auto auto 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.arh-overlay > div {
+  position: absolute;
+  border-radius: 4px;
+  background: var(--arh-sentence);
+}
+
+[data-readable] {
+  cursor: text;
+}
+
+/* ---- player ---------------------------------------------------------------- */
+
+.arh-dock-wrap {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 30;
+  width: min(760px, 100% - 24px);
+  transform: translateX(-50%);
+}
+
+.arh-dock {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px 10px 10px;
+  border: 1px solid var(--arh-line-2);
+  border-radius: 999px;
+  background: var(--arh-dock);
+  backdrop-filter: blur(22px) saturate(1.5);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5);
+  box-shadow:
+    0 24px 60px -24px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.arh-dock-unsupported {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  display: block;
+  padding: 12px 20px;
+  font-size: 14px;
+  color: var(--arh-ink-2);
+}
+
+.arh-dock-transport {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.arh-play-btn {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--arh-accent),
+    color-mix(in srgb, var(--arh-accent) 55%, var(--arh-accent-2))
+  );
+  color: var(--arh-accent-ink);
+  cursor: pointer;
+  box-shadow: 0 8px 24px -8px var(--arh-glow);
+  transition: transform 0.2s;
+}
+
+.arh-play-btn:hover {
+  transform: scale(1.05);
+}
+
+.arh-play-btn:active {
+  transform: scale(0.96);
+}
+
+.arh-dock[data-state='playing'] .arh-play-btn {
+  animation: arh-breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes arh-breathe {
+  50% {
+    box-shadow: 0 8px 30px -4px var(--arh-glow);
+  }
+}
+
+.arh-icon-btn,
+.arh-text-btn {
+  display: grid;
+  place-items: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--arh-ink-2);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    opacity 0.2s;
+}
+
+.arh-text-btn {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.arh-icon-btn:hover:not(:disabled),
+.arh-text-btn:hover,
+.arh-icon-btn[aria-expanded='true'],
+.arh-text-btn[aria-expanded='true'] {
+  background: var(--arh-surface-2);
+  color: var(--arh-ink);
+}
+
+.arh-icon-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.arh-dock-now {
+  min-width: 0;
+}
+
+.arh-dock-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--arh-ink-3);
+}
+
+.arh-dock-label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.arh-dock-count {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.arh-dock-word {
+  position: relative;
+  height: 24px;
+  overflow: hidden;
+  font-family: var(--arh-font-display);
+  font-size: 18px;
+  line-height: 24px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.arh-dock-word > span {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arh-dock-hint {
+  color: var(--arh-ink-3);
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.arh-progress {
+  height: 3px;
+  margin-top: 6px;
+  border-radius: 3px;
+  background: var(--arh-line);
+  overflow: hidden;
+}
+
+.arh-progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--arh-accent), var(--arh-accent-2));
+  transform-origin: left;
+  transition: transform 0.3s ease-out;
+}
+
+.arh-dock-tools {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.arh-sync {
+  margin-right: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.arh-sync-boundary {
+  background: color-mix(in srgb, var(--arh-accent-2) 16%, transparent);
+  color: var(--arh-accent-2);
+}
+
+.arh-sync-estimated {
+  background: var(--arh-surface-2);
+  color: var(--arh-ink-3);
+}
+
+.arh-dock-panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  width: min(340px, 100%);
+  max-height: min(460px, 70vh);
+  overflow: auto;
+  padding: 16px;
+  border: 1px solid var(--arh-line-2);
+  border-radius: 22px;
+  background: var(--arh-dock);
+  backdrop-filter: blur(22px) saturate(1.5);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5);
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.6);
+}
+
+.arh-panel-title {
+  margin: 0 0 10px;
+  color: var(--arh-ink-3);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.arh-speed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.arh-chip {
+  height: 38px;
+  border: 1px solid var(--arh-line);
+  border-radius: 12px;
+  background: transparent;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.arh-chip:hover {
+  border-color: var(--arh-line-2);
+}
+
+.arh-chip[aria-checked='true'] {
+  border-color: var(--arh-accent);
+  background: color-mix(in srgb, var(--arh-accent) 16%, transparent);
+  color: var(--arh-ink);
+}
+
+.arh-slider {
+  display: grid;
+  grid-template-columns: 64px 1fr 48px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--arh-ink-2);
+}
+
+.arh-slider output {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.arh-slider input {
+  width: 100%;
+  accent-color: var(--arh-accent);
+}
+
+.arh-voice-list {
+  display: grid;
+  gap: 2px;
+  max-height: 220px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.arh-voice-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.arh-voice-list li:hover,
+.arh-voice-list li[aria-selected='true'] {
+  background: var(--arh-surface-2);
+}
+
+.arh-voice-list li[aria-selected='true'] svg {
+  color: var(--arh-accent);
+}
+
+.arh-voice-list small {
+  display: block;
+  color: var(--arh-ink-3);
+  font-size: 12px;
+}
+
+.arh-dock-panel {
+  animation: arh-pop 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes arh-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+
+.arh-dock-word > span {
+  animation: arh-word-in 0.12s ease-out;
+}
+
+@keyframes arh-word-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.arh-dock-wrap button {
+  font: inherit;
+  color: inherit;
+}
+
+@media (max-width: 720px) {
+  .arh-dock {
+    grid-template-columns: auto minmax(0, 1fr);
+    border-radius: 26px;
+    gap: 10px 12px;
+  }
+
+  .arh-dock-tools {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+    padding-top: 8px;
+    border-top: 1px solid var(--arh-line);
+  }
+
+  .arh-dock-transport .arh-icon-btn {
+    min-width: 36px;
+  }
+
+  .arh-play-btn {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arh-pill,
+  .arh-dock-panel,
+  .arh-dock-word > span,
+  .arh-play-btn {
+    animation: none !important;
+    transition: opacity 0.2s !important;
+  }
+}
