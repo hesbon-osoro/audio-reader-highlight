@@ -112,3 +112,7 @@ needed.
 
    `.github/workflows/publish.yml` then tests, builds, smoke-tests and publishes the package with
    provenance. It refuses to publish if the tag doesn't match the package version.
+
+If a release's run fails because of the workflow itself, fix the workflow through a PR. Then use
+**Actions → Publish to npm → Run workflow** on `main`, because re-running the release would reuse the
+old workflow file from the tag. The workflow refuses to publish a version that is already on npm.
