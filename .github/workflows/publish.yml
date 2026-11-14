@@ -23,6 +23,10 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      # The site pins Node 22.x, but trusted publishing needs npm 11.5+ (Node 24). That pin is for
+      # Vercel; the package itself supports any Node.
+      YARN_IGNORE_ENGINES: '1'
     steps:
       - uses: actions/checkout@v7
       # No registry-url: it writes an .npmrc that references NODE_AUTH_TOKEN, which yarn 1 refuses to
@@ -52,7 +56,7 @@ jobs:
             exit 1
           fi
       - run: npm --version
-      - run: yarn install --frozen-lockfile --ignore-engines
+      - run: yarn install --frozen-lockfile
       - run: yarn test
       - run: yarn build:package
       - run: ./scripts/smoke-pack.sh
