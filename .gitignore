@@ -33,3 +33,6 @@ Thumbs.db
 *.local
 *.tsbuildinfo
 packages/*/dist
+
+# This is a yarn project; never commit a pnpm lockfile
+pnpm-lock.yaml
