@@ -98,7 +98,8 @@ html {
 
 body {
   margin: 0;
-  background: radial-gradient(
+  background:
+    radial-gradient(
       1200px 600px at 85% -10%,
       rgba(139, 156, 255, 0.12),
       transparent 60%

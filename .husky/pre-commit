@@ -1,6 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-# Run lint-staged for staged files (format + eslint) - but don't block commits
+# Format and lint staged files with the local lint-staged (npx skips the engines check, so any Node 22+ works). Failures are reported but don't block the commit.
 echo "Running pre-commit checks..."
-pnpm lint-staged || npx lint-staged || yarn lint-staged || npx --no-install lint-staged || echo "Pre-commit checks failed but allowing commit to proceed"
+npx --no-install lint-staged || echo "Pre-commit checks failed but allowing commit to proceed"

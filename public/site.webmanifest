@@ -8,11 +8,7 @@
   "orientation": "any",
   "theme_color": "#0a0b10",
   "background_color": "#0a0b10",
-  "categories": [
-    "accessibility",
-    "education",
-    "productivity"
-  ],
+  "categories": ["accessibility", "education", "productivity"],
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
