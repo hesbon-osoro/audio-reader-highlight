@@ -35,13 +35,18 @@ Thanks for your interest in contributing! Please follow the guide below to propo
 
 ## Publishing
 
-1. Bump `version` in `packages/audio-reader-highlight/package.json`.
-2. `cd packages/audio-reader-highlight && npm publish` (the build runs first through `prepublishOnly`).
+Releases are published by GitHub Actions with npm trusted publishing. See "Releasing the npm
+package" in the [README](README.md#releasing-the-npm-package).
 
 ## Code of Conduct
 
-- Be respectful and constructive.
-- Assume good intent; propose solutions; listen actively.
+This project follows the [Contributor Covenant 2.1](CODE_OF_CONDUCT.md). Be respectful and
+constructive, assume good intent, and propose solutions.
+
+## Security
+
+Please report vulnerabilities privately, as described in [SECURITY.md](SECURITY.md). Don't use public
+issues for them.
 
 ## Author & Maintainer
 

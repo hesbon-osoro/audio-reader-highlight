@@ -135,3 +135,7 @@ browsers); older ones fall back to positioned boxes.
 
 MIT © [Hesbon Osoro](https://hesbon.dev). Questions and ideas:
 [osoro@hesbon.dev](mailto:osoro@hesbon.dev).
+
+## Security and conduct
+
+Report vulnerabilities privately; see [SECURITY.md](https://github.com/hesbon-osoro/audio-reader-highlight/blob/main/SECURITY.md). This project follows the [Contributor Covenant](https://github.com/hesbon-osoro/audio-reader-highlight/blob/main/CODE_OF_CONDUCT.md).
