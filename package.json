@@ -94,6 +94,7 @@
     "**/test-exclude/glob": "^13.0.6",
     "**/@jest/reporters/glob": "^13.0.6",
     "**/jest-config/glob": "^13.0.6",
-    "**/jest-runtime/glob": "^13.0.6"
+    "**/jest-runtime/glob": "^13.0.6",
+    "**/tsup/esbuild": "^0.28.1"
   }
 }
