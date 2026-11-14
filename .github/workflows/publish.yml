@@ -1,0 +1,45 @@
+name: Publish to npm
+
+# Publishes packages/audio-reader-highlight when a GitHub release is published.
+# It uses npm trusted publishing (OIDC): no npm token is stored anywhere. The package's npm settings
+# must list this repo and this workflow file (publish.yml) as a trusted publisher.
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write # lets npm verify this workflow and attach provenance
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24 # npm 11.5.1+ is required for trusted publishing
+          registry-url: https://registry.npmjs.org
+          cache: yarn
+      - name: Check the tag matches the package version
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          version="$(node -p "require('./packages/audio-reader-highlight/package.json').version")"
+          if [ "$TAG" != "v$version" ]; then
+            echo "::error::Release tag $TAG does not match package version v$version"
+            exit 1
+          fi
+      - run: npm --version
+      - run: YARN_IGNORE_ENGINES=1 yarn install --frozen-lockfile
+      - run: yarn test
+      - run: yarn build:package
+      - run: ./scripts/smoke-pack.sh
+      - name: Publish
+        working-directory: packages/audio-reader-highlight
+        run: npm publish --provenance --access public
