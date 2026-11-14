@@ -48,27 +48,27 @@
   ],
   "dependencies": {
     "framer-motion": "^10.18.0",
-    "lucide-react": "^0.454.0",
-    "next": "15.5.28",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "lucide-react": "^0.577.0",
+    "next": "15.5.29",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "sonner": "^1.5.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "@types/node": "20.8.10",
+    "@types/node": "20.19.43",
     "@types/react": "18.2.24",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "8.57.0",
-    "eslint-config-next": "14.2.3",
+    "eslint-config-next": "14.2.35",
     "husky": "^9.1.6",
     "jest": "^30.5.2",
     "lint-staged": "^15.2.10",
-    "prettier": "3.4.2",
+    "prettier": "3.9.10",
     "ts-jest": "^29.4.12",
-    "tsup": "8.3.5",
-    "typescript": "5.3.3"
+    "tsup": "8.5.1",
+    "typescript": "5.9.3"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
