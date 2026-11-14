@@ -94,3 +94,21 @@ Hesbon Osoro — available for contribution and crafting software solutions.
 - Website: https://hesbon.dev
 - Email: osoro@hesbon.dev
 - GitHub: https://github.com/hesbon-osoro
+
+## Releasing the npm package
+
+Releases are published from GitHub Actions with npm trusted publishing, so no npm token or login is
+needed.
+
+1. Open an issue and a `release/vX.Y.Z` branch.
+2. Bump `version` in `packages/audio-reader-highlight/package.json` and add a section to its
+   `CHANGELOG.md`.
+3. Open a PR, wait for CI to pass, then merge.
+4. Create a GitHub release with the tag `vX.Y.Z` on `main`:
+
+   ```sh
+   gh release create vX.Y.Z --target main --title "vX.Y.Z" --notes-file <notes>
+   ```
+
+   `.github/workflows/publish.yml` then tests, builds, smoke-tests and publishes the package with
+   provenance. It refuses to publish if the tag doesn't match the package version.
