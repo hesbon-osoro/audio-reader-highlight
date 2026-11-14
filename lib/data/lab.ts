@@ -61,7 +61,8 @@ export const labUnits: LabUnit[] = [
     id: 'units',
     title: 'Units',
     rule: 'Number + unit, singular or plural.',
-    sample: '1 m, 2m, 3.5 km, 10cm, 25 mm, 2.4GHz, 1 Hz, 2 Hz, 50%, 90 kW, 220 V, 10 A.',
+    sample:
+      '1 m, 2m, 3.5 km, 10cm, 25 mm, 2.4GHz, 1 Hz, 2 Hz, 50%, 90 kW, 220 V, 10 A.',
   },
   {
     id: 'si',
@@ -79,24 +80,28 @@ export const labUnits: LabUnit[] = [
     id: 'area',
     title: 'Area & volume',
     rule: 'Squared and cubed units.',
-    sample: '1 m², 12 cm², 3 km², 24 in², 2 ft². 2 m³, 15 cm³, 0.5 km³, 1 L, 250 mL.',
+    sample:
+      '1 m², 12 cm², 3 km², 24 in², 2 ft². 2 m³, 15 cm³, 0.5 km³, 1 L, 250 mL.',
   },
   {
     id: 'pressure',
     title: 'Speed & pressure',
     rule: 'Compound units like km/h and mmHg.',
-    sample: '60 km/h, 27.8 m/s, 45 mph. 101 kPa, 1 atm, 14.7 psi, 760 mmHg, 1 bar, 50 mbar, 0.5 MPa.',
+    sample:
+      '60 km/h, 27.8 m/s, 45 mph. 101 kPa, 1 atm, 14.7 psi, 760 mmHg, 1 bar, 50 mbar, 0.5 MPa.',
   },
   {
     id: 'energy',
     title: 'Electrical & energy',
     rule: 'Ohms, webers, newton-metres, watt-hours.',
-    sample: '5 Ω, 2 Wb, 300 lm, 500 lx, 30 dB. 100 N, 250 J, 1 mol, 20 N·m. 400 Wh, 1.2 kWh, 2000 mAh, 2 Ah.',
+    sample:
+      '5 Ω, 2 Wb, 300 lm, 500 lx, 30 dB. 100 N, 250 J, 1 mol, 20 N·m. 400 Wh, 1.2 kWh, 2000 mAh, 2 Ah.',
   },
   {
     id: 'numbers',
     title: 'Large numbers',
     rule: 'Grouped digits read as a whole.',
-    sample: 'A trillion dollars is $1,000,000,000,000, and the Sun is about 149,600,000 km away.',
+    sample:
+      'A trillion dollars is $1,000,000,000,000, and the Sun is about 149,600,000 km away.',
   },
 ];
