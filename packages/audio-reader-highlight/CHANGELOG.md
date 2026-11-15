@@ -22,6 +22,12 @@ All notable changes to `audio-reader-highlight` are recorded here. This project 
   - `useNativeReader()` hook, and `highlightParts()` for drawing the word with
     nested `<Text>`.
 
+### Fixed
+
+- A spaced hyphen between words ("Strongest Currency - Small Donations") was
+  read as "minus". "Minus" is now read only between maths operands (`5 - 3`,
+  `x - 1`, `(a + b) - c`). Between words, the hyphen is read as a dash: a pause.
+
 ## 2.0.0 — 2026-11-14
 
 A rewrite. The package is now a reusable library with no runtime dependencies, rather than code
