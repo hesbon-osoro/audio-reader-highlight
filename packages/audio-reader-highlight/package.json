@@ -62,10 +62,6 @@
       }
     },
     "./native": {
-      "react-native": {
-        "types": "./dist/native.d.ts",
-        "default": "./dist/native.js"
-      },
       "import": {
         "types": "./dist/native.d.ts",
         "default": "./dist/native.js"
