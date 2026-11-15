@@ -327,10 +327,17 @@ function buildSubs(): Sub[] {
     },
     // Approximately: ~5
     { pattern: /~(?=\s?\d)/u, replace: () => 'about ' },
-    // Arithmetic between spaced operands: 5 - 3, 2 * 4, a + b, x < 5
+    // Arithmetic between spaced operands: 2 * 4, a + b, x < 5
     {
-      pattern: /(?<=[\p{L}\p{N})²³]\s)([-+*/<>])(?=\s[\p{L}\p{N}(√−-])/u,
+      pattern: /(?<=[\p{L}\p{N})²³]\s)([+*/<>])(?=\s[\p{L}\p{N}(√−-])/u,
       replace: m => operators[m[1]],
+    },
+    // Minus only between maths operands: 5 - 3, x - 1, (a + b) - c. Between
+    // words a spaced hyphen is a dash ("Currency - Small Donations"), a pause.
+    {
+      pattern:
+        /(?<=(?:[\p{N})\]²³]|(?<!\p{L})\p{L})\s)-(?=\s(?:[\p{N}(√−-]|\p{L}(?!\p{L})))/u,
+      replace: () => operators['-'],
     },
     // Greek letters and mathematical symbols
     {

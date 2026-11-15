@@ -79,3 +79,23 @@ describe('source spans', () => {
     expect(ends).toEqual([1, 2, 3]);
   });
 });
+
+describe('hyphens', () => {
+  it.each([
+    ['5 - 3 = 2', '5 minus 3 equals 2'],
+    ['x - 1', 'x minus 1'],
+    ['(a + b) - c', '(a plus b) minus c'],
+    ['10 - x', '10 minus x'],
+  ])('reads maths %s as %s', (input, expected) => {
+    expect(speech(input)).toBe(expected);
+  });
+
+  it.each([
+    'Strongest Currency - Small Donations',
+    'Kenya - a story of hope',
+    'Mary - and Lydia',
+    'Step 1 - Install',
+  ])('keeps a spaced hyphen between words as a dash: %s', input => {
+    expect(speech(input)).not.toMatch(/minus/);
+  });
+});
