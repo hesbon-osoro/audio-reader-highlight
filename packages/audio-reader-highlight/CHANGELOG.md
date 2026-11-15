@@ -22,7 +22,27 @@ All notable changes to `audio-reader-highlight` are recorded here. This project 
   - `useNativeReader()` hook, and `highlightParts()` for drawing the word with
     nested `<Text>`.
 
+- **`follow` setting** (default `true`): `reader.configure({ follow: false })`
+  stops the reader scrolling to keep the spoken word in view.
+- **`ListenButton` has default styles**: an accent pill that turns quiet while
+  playing. Its `arh-listen` class used to have none.
+
 ### Fixed
+
+- **Decades and plural numbers are read as words**: `1990s`, `’80s`, `Air Force
+1s`. They used to be read as "1990 seconds".
+- **Clock times are read as times**: `9am`, `2:15pm`, `7 p.m.`, and ranges like
+  `9am-5pm` ("9 AM to 5 PM"). They used to be read as attometres and picometres.
+- **The word stays visible on cards and table cells** inside a readable region.
+  The sliding pill sits behind backgrounds, so there the word paints its own
+  highlight instead.
+- **Any scroll the reader didn't start pauses following**: keyboard, scrollbar,
+  find-in-page and links, not just wheel and touch. Before, Page Down and arrow
+  keys were pulled back while reading.
+- **The dock sets its own text colour**, so a page's colours can't make its
+  text unreadable.
+- **The dock's pitch slider goes up to 2**, the full range speech engines
+  accept.
 
 - `audio-reader-highlight/native` loads in Jest (jest-expo) without extra
   configuration: it resolves to the CommonJS build there, and to ESM in Metro.
