@@ -22,7 +22,12 @@ import {
   SYMBOLS,
 } from './data/science';
 
-type Sub = { pattern: RegExp; replace: (m: RegExpExecArray) => string };
+type Sub = {
+  pattern: RegExp;
+  replace: (m: RegExpExecArray) => string;
+  /** Read the match as written, and stop later rules from rewriting it. */
+  keep?: boolean;
+};
 
 function escapeRegex(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -237,6 +242,25 @@ function buildSubs(): Sub[] {
       ),
       replace: m => money(m[2], m[3], currencyCodes[m[1]] || ''),
     },
+    // Clock times: 9am, 2:15pm, 7 p.m., 10 AM. Before units, so "pm" is not
+    // picometres. Only plausible clock hours (1-12, or h:mm).
+    {
+      pattern:
+        /(?<![\p{L}\p{N}_.:])((?:1[0-2]|0?[1-9])(?::[0-5]\d)?)\s?([aApP])\.?[mM]\.?(?![\p{L}\p{N}])/u,
+      replace: m => `${m[1]} ${m[2].toUpperCase()}M`,
+    },
+    // A time range: 9am-5pm, 9:00 - 17:30 → "to"
+    {
+      pattern:
+        /(?<=\d\s?[aApP]\.?[mM]\.?|\d:[0-5]\d)\s?[-–]\s?(?=\d{1,2}(?::[0-5]\d|\s?[aApP]\.?[mM]))/u,
+      replace: () => ' to ',
+    },
+    // Decades and plural numbers are words, not seconds: 1990s, '80s, Air Force 1s
+    {
+      pattern: /(?<![\p{L}\p{N}_.])['’]?\d+s(?![\p{L}\p{N}])/u,
+      replace: m => m[0],
+      keep: true,
+    },
     // Number + unit, including SI prefixes (kΩ, ps, MW) and a unit-specific
     // power (mol⁻¹). The direct unit is tried first so kWh is not split into
     // kW + h.
@@ -383,7 +407,7 @@ export function buildSpeechFromSegment(segment: string): SpeechMap {
       if (m && m[0].length > 0) {
         const text = sub.replace(m);
         // A rule that declines (returns its match unchanged) lets later rules try.
-        if (text === m[0]) continue;
+        if (text === m[0] && !sub.keep) continue;
         hit = { end: i + m[0].length, text };
         break;
       }

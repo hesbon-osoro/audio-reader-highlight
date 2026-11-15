@@ -30,6 +30,8 @@ export interface ReaderSettings {
   pitch: number;
   volume: number;
   voiceURI: string;
+  /** Scroll to keep the spoken word in view (default true). */
+  follow: boolean;
 }
 
 export interface ReaderState {
@@ -92,7 +94,26 @@ const DEFAULT_SETTINGS: ReaderSettings = {
   pitch: 1,
   volume: 1,
   voiceURI: '',
+  follow: true,
 };
+
+const transparent = (color: string) =>
+  color === 'transparent' || /[,/]\s*0(?:\.0*)?\s*\)$/.test(color);
+
+/** Whether an element between the word and the region root paints a background. */
+function coveredByBackground(range: Range, root: HTMLElement) {
+  let el: Element | null =
+    range.startContainer instanceof Element
+      ? range.startContainer
+      : range.startContainer.parentElement;
+  while (el && el !== root) {
+    const cs = getComputedStyle(el);
+    if (cs.backgroundImage !== 'none' || !transparent(cs.backgroundColor))
+      return true;
+    el = el.parentElement;
+  }
+  return false;
+}
 
 const hasHighlights = () =>
   typeof CSS !== 'undefined' &&
@@ -205,6 +226,7 @@ export class ReadAloud {
   private raf = 0;
   private gotBoundary = false;
   private userScrolledAt = 0;
+  private autoScrollUntil = 0;
   private overlay: HTMLDivElement | null = null;
 
   constructor(options: ReaderOptions = {}) {
@@ -232,8 +254,9 @@ export class ReadAloud {
       progress: 0,
       word: '',
       sync: null,
+      // Saved settings from an older version may lack newer fields.
       settings: supported
-        ? load(this.keys.settings, DEFAULT_SETTINGS)
+        ? { ...DEFAULT_SETTINGS, ...load(this.keys.settings, DEFAULT_SETTINGS) }
         : DEFAULT_SETTINGS,
       voices: [],
       supported,
@@ -257,6 +280,15 @@ export class ReadAloud {
     const userScroll = () => (this.userScrolledAt = Date.now());
     w.addEventListener('wheel', userScroll, { passive: true });
     w.addEventListener('touchmove', userScroll, { passive: true });
+    // Any other scroll the reader didn't start (keyboard, scrollbar, find in
+    // page, a link) is the reader's too.
+    w.addEventListener(
+      'scroll',
+      () => {
+        if (Date.now() > this.autoScrollUntil) userScroll();
+      },
+      { passive: true }
+    );
     w.addEventListener('resize', () => this.paint());
     w.addEventListener('pagehide', () => this.stop());
   }
@@ -763,9 +795,21 @@ export class ReadAloud {
       if (sentence.length)
         CSS.highlights.set('tts-sentence', new Highlight(...sentence));
       else CSS.highlights.delete('tts-sentence');
+      // On a card or table cell inside the region the pill would sit behind
+      // the card's background; paint the word's own background instead.
+      const covered =
+        !!this.wordRange && coveredByBackground(this.wordRange, r.root);
+      CSS.highlights.delete(covered ? 'tts-word' : 'tts-word-solid');
       if (this.wordRange)
-        CSS.highlights.set('tts-word', new Highlight(this.wordRange));
+        CSS.highlights.set(
+          covered ? 'tts-word-solid' : 'tts-word',
+          new Highlight(this.wordRange)
+        );
       else CSS.highlights.delete('tts-word');
+      if (covered) {
+        if (this.pill) this.pill.dataset.on = 'false';
+        return;
+      }
     } else this.paintBoxes(sentence);
     this.placePill(r.root);
   }
@@ -847,6 +891,7 @@ export class ReadAloud {
     if (hasHighlights()) {
       CSS.highlights.delete('tts-sentence');
       CSS.highlights.delete('tts-word');
+      CSS.highlights.delete('tts-word-solid');
     }
     this.overlay?.replaceChildren();
     this.removePill();
@@ -854,16 +899,24 @@ export class ReadAloud {
 
   /** Keep the spoken word comfortably in view, unless the reader is scrolling. */
   private keepInView() {
-    if (!this.wordRange || Date.now() - this.userScrolledAt < 2500) return;
+    if (
+      !this.state.settings.follow ||
+      !this.wordRange ||
+      Date.now() - this.userScrolledAt < 2500
+    )
+      return;
     const rect = this.wordRange.getBoundingClientRect();
     if (!rect.height) return;
     const top = innerHeight * 0.18;
     const bottom = innerHeight * 0.68;
-    if (rect.top < top || rect.bottom > bottom)
+    if (rect.top < top || rect.bottom > bottom) {
+      // Our own smooth scroll fires scroll events for a while; they're not the user's.
+      this.autoScrollUntil = Date.now() + 1000;
       scrollTo({
         top: scrollY + rect.top - innerHeight * 0.38,
         behavior: 'smooth',
       });
+    }
   }
 }
 

@@ -12,7 +12,7 @@ const serverState: ReaderState = {
   progress: 0,
   word: '',
   sync: null,
-  settings: { rate: 1, pitch: 1, volume: 1, voiceURI: '' },
+  settings: { rate: 1, pitch: 1, volume: 1, voiceURI: '', follow: true },
   voices: [],
   supported: true,
 };
