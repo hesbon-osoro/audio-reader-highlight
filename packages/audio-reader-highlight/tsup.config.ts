@@ -14,6 +14,9 @@ const shared: Options = {
 export default defineConfig([
   // The framework-free core: safe to import on a server or in a worker.
   { ...shared, entry: { index: 'src/index.ts' }, clean: true },
+  // React Native, Expo and anything else without a DOM to paint. Bundles its
+  // own copy of the text layer so it never pulls in the DOM reader.
+  { ...shared, entry: { native: 'src/native/index.ts' } },
   {
     ...shared,
     entry: { react: 'src/react/index.ts' },

@@ -3,6 +3,25 @@
 All notable changes to `audio-reader-highlight` are recorded here. This project follows
 [Semantic Versioning](https://semver.org/).
 
+## 2.1.0 — 2026-11-16
+
+### Added
+
+- **`audio-reader-highlight/native`: the reader for React Native and Expo**
+  (iOS, Android and web). It needs no DOM and no native code.
+  - `NativeReader` reads text blocks sentence by sentence through any speech
+    engine, with the same speech normaliser.
+  - It reports the exact source word being spoken, from boundary events or a
+    self-calibrating estimate.
+  - Pause resumes from the current word on every platform, including Android.
+  - `skip`, `seek` (tap to read) and live `configure` are included.
+  - `announce()` speaks voice prompts that cut in and hand back to the reading,
+    or wait for the end of the sentence.
+  - `expoSpeechEngine(Speech)` and `webSpeechEngine()` adapters; `SpeechEngine`
+    for anything else.
+  - `useNativeReader()` hook, and `highlightParts()` for drawing the word with
+    nested `<Text>`.
+
 ## 2.0.0 — 2026-11-14
 
 A rewrite. The package is now a reusable library with no runtime dependencies, rather than code
