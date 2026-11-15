@@ -1,7 +1,7 @@
 {
   "name": "audio-reader-highlight",
-  "version": "2.0.0",
-  "description": "Read-aloud for the web that highlights the exact word being spoken and reads science, units, currencies and abbreviations naturally.",
+  "version": "2.1.0",
+  "description": "Read-aloud that highlights the exact word being spoken, on the web and in React Native, and reads science, units, currencies and abbreviations naturally.",
   "license": "MIT",
   "author": {
     "name": "Hesbon Osoro",
@@ -29,7 +29,12 @@
     "react",
     "scientific-notation",
     "units",
-    "currency"
+    "currency",
+    "react-native",
+    "expo",
+    "ios",
+    "android",
+    "voice-guidance"
   ],
   "type": "module",
   "main": "./dist/index.cjs",
@@ -54,6 +59,20 @@
       "require": {
         "types": "./dist/react.d.cts",
         "default": "./dist/react.cjs"
+      }
+    },
+    "./native": {
+      "react-native": {
+        "types": "./dist/native.d.ts",
+        "default": "./dist/native.js"
+      },
+      "import": {
+        "types": "./dist/native.d.ts",
+        "default": "./dist/native.js"
+      },
+      "require": {
+        "types": "./dist/native.d.cts",
+        "default": "./dist/native.cjs"
       }
     },
     "./styles.css": "./dist/styles.css",

@@ -1,6 +1,6 @@
 # audio-reader-highlight
 
-Read-aloud for the web that highlights the exact word being spoken, and reads
+Read-aloud for the web, iOS and Android that highlights the exact word being spoken, and reads
 the things other readers stumble on the way a person would: `6.022×10²³`,
 `H₂O`, `E = mc²`, `45 °C`, `$2.5k`, `Dr.`, `e.g.`, `½`, `λ`.
 
@@ -79,7 +79,75 @@ reader.subscribe(state =>
 Mark anything that shouldn't be read with `data-tts-skip` (or
 `aria-hidden="true"`).
 
-## Text only (servers, workers, React Native)
+## React Native and Expo (iOS, Android, web)
+
+`audio-reader-highlight/native` brings the same reader to apps: the same
+speech normaliser, word-exact highlighting and reliable transport, through the
+platform's own text-to-speech. It has no DOM and no native code, so it works in
+Expo Go.
+
+```sh
+npx expo install expo-speech
+npm install audio-reader-highlight
+```
+
+```tsx
+import * as Speech from 'expo-speech';
+import { Text, Pressable } from 'react-native';
+import {
+  expoSpeechEngine,
+  highlightParts,
+  useNativeReader,
+} from 'audio-reader-highlight/native';
+
+const engine = expoSpeechEngine(Speech);
+
+export function Story({ paragraphs }: { paragraphs: string[] }) {
+  const { reader, state } = useNativeReader(engine, paragraphs);
+  return (
+    <>
+      {paragraphs.map((text, i) => (
+        <Text key={i}>
+          {highlightParts(
+            text,
+            state.word?.block === i ? state.word : null
+          ).map((part, k) => (
+            <Text
+              key={k}
+              style={part.active ? { backgroundColor: '#dfe3ff' } : undefined}
+            >
+              {part.text}
+            </Text>
+          ))}
+        </Text>
+      ))}
+      <Pressable onPress={() => reader.toggle()}>
+        <Text>{state.status === 'playing' ? 'Pause' : 'Listen'}</Text>
+      </Pressable>
+    </>
+  );
+}
+```
+
+- **Word timing:** from the voice's boundary events where the platform sends
+  them (iOS, web), and from an estimate that calibrates itself to the voice
+  where it doesn't (most Android voices). `state.sync` says which.
+- **Pause resumes from the word**, even on Android, where expo-speech can't
+  pause. Also `skip(±1)`, `seek(block, offset)` (tap to read), `stop()` and
+  `configure({ rate, pitch, language, voice })`, which applies from the
+  current word.
+- **Voice prompts.** `reader.announce('In 300 m, turn left.')` cuts in, then
+  carries on from the word it interrupted. `{ interrupt: false }` waits for
+  the end of the sentence. With nothing loaded, prompts simply queue, which
+  suits driving and navigation apps.
+- **Any engine.** `webSpeechEngine()` is included. For anything else
+  (react-native-tts, a cloud voice), implement `SpeechEngine`: `speak(text,
+{ rate, pitch, volume, language, voice, onStart, onDone, onError,
+onBoundary })` and `stop()`.
+- **No React?** Use `new NativeReader({ engine })` with `load`, `play` and
+  `subscribe` directly.
+
+## Text only (servers, workers)
 
 The speech normaliser and sentence splitter have no DOM dependency:
 
@@ -91,10 +159,9 @@ buildSpeechFromSegment('Water is H₂O; 1.6 × 10⁻¹⁹ C.').speech;
 ```
 
 `speech` is the text to hand to any speech engine. `map` and `ends` hold, for
-each spoken character, the source characters it came from. In a native app,
-pass `speech` to the platform's text-to-speech and map its word callbacks back
-through `map` to highlight the source. In a WebView (Capacitor, Cordova,
-React Native WebView) the full reader works as it does in a browser.
+each spoken character, the source characters it came from. In a WebView
+(Capacitor, Cordova, React Native WebView) the full DOM reader works as it
+does in a browser.
 
 ## Theming
 
