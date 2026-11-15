@@ -24,6 +24,8 @@ All notable changes to `audio-reader-highlight` are recorded here. This project 
 
 ### Fixed
 
+- `audio-reader-highlight/native` loads in Jest (jest-expo) without extra
+  configuration: it resolves to the CommonJS build there, and to ESM in Metro.
 - A spaced hyphen between words ("Strongest Currency - Small Donations") was
   read as "minus". "Minus" is now read only between maths operands (`5 - 3`,
   `x - 1`, `(a + b) - c`). Between words, the hyphen is read as a dash: a pause.
