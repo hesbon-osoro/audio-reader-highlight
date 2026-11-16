@@ -3,6 +3,15 @@
 All notable changes to `audio-reader-highlight` are recorded here. This project follows
 [Semantic Versioning](https://semver.org/).
 
+## 2.1.1 — 2026-11-16
+
+### Added
+
+- **Ways to support the project**, all optional: a `funding` field (shown by
+  `npm fund` and on the npm page) and a Support section in the README, linking
+  to [hesbon.dev/pay](https://hesbon.dev/pay?kind=custom) and
+  [able-hearts.org/donate](https://able-hearts.org/donate). No code changes.
+
 ## 2.1.0 — 2026-11-16
 
 ### Added
