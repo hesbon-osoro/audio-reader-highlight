@@ -501,11 +501,16 @@ export class ReadAloud {
   }
 
   configure(patch: Partial<ReaderSettings>) {
-    const settings = { ...this.state.settings, ...patch };
+    const before = this.state.settings;
+    const settings = { ...before, ...patch };
     save(this.keys.settings, settings);
     this.set({ settings });
-    // Apply immediately from the current word.
-    if (this.state.status === 'playing' && this.region)
+    // A new rate, pitch, volume or voice applies from the current word. Other
+    // settings (follow) take effect without interrupting the voice.
+    const audible = (['rate', 'pitch', 'volume', 'voiceURI'] as const).some(
+      k => settings[k] !== before[k]
+    );
+    if (audible && this.state.status === 'playing' && this.region)
       this.speak(this.sentence, this.cursor);
   }
 

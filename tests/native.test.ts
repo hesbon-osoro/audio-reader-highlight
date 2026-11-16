@@ -182,6 +182,20 @@ describe('NativeReader', () => {
     expect(f.last().text).toBe('gamma delta.');
     expect(f.last().o.rate).toBe(1.5);
   });
+
+  it('does not interrupt the voice when a setting is set to the value it already has', () => {
+    const f = fakeEngine();
+    const r = new NativeReader({ engine: f.engine, settings: { rate: 1.2 } });
+    r.load(['Alpha beta gamma delta.']);
+    r.play();
+    const { text, o } = f.last();
+    o.onStart();
+    o.onBoundary(text.indexOf('gamma'));
+    const spoken = f.calls.length;
+    r.configure({ rate: 1.2 });
+    expect(f.calls.length).toBe(spoken);
+    expect(r.getState().status).toBe('playing');
+  });
 });
 
 describe('expoSpeechEngine', () => {
