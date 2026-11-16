@@ -1,6 +1,6 @@
 {
   "name": "audio-reader-highlight",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Read-aloud that highlights the exact word being spoken, on the web and in React Native, and reads science, units, currencies and abbreviations naturally.",
   "license": "MIT",
   "author": {
@@ -14,6 +14,16 @@
     "url": "git+https://github.com/hesbon-osoro/audio-reader-highlight.git",
     "directory": "packages/audio-reader-highlight"
   },
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://hesbon.dev/pay?kind=custom"
+    },
+    {
+      "type": "charity",
+      "url": "https://able-hearts.org/donate"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/hesbon-osoro/audio-reader-highlight/issues"
   },

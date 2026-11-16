@@ -79,6 +79,20 @@ Direct JSON files in the repo:
 - `packages/audio-reader-highlight/src/data/common-currency.json`
 - `packages/audio-reader-highlight/src/data/common-abbreviations.json`
 
+## Support
+
+audio-reader-highlight is free and always will be: no paid tier, no feature
+behind a key. If it saves you time or helps your readers, you can give back,
+entirely by choice:
+
+- [Buy Hesbon a coffee](https://hesbon.dev/pay?kind=custom): M-Pesa, card or
+  Apple Pay.
+- [Donate to Able Hearts](https://able-hearts.org/donate), the charity whose
+  stories this reader was first built to read aloud.
+
+A star on [GitHub](https://github.com/hesbon-osoro/audio-reader-highlight),
+a review or a fork helps too. `npm fund` lists these links.
+
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md).

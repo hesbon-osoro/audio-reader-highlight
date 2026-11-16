@@ -198,6 +198,20 @@ Any browser with the Web Speech API: Chrome, Edge, Safari, Firefox and their
 mobile versions. The Highlight API is used where available (all current
 browsers); older ones fall back to positioned boxes.
 
+## Support
+
+audio-reader-highlight is free and always will be: no paid tier, no feature
+behind a key. If it saves you time or helps your readers, you can give back,
+entirely by choice:
+
+- [Buy Hesbon a coffee](https://hesbon.dev/pay?kind=custom): M-Pesa, card or
+  Apple Pay.
+- [Donate to Able Hearts](https://able-hearts.org/donate), the charity whose
+  stories this reader was first built to read aloud.
+
+A star on [GitHub](https://github.com/hesbon-osoro/audio-reader-highlight),
+a review or a fork helps too. `npm fund` lists these links.
+
 ## Licence
 
 MIT © [Hesbon Osoro](https://hesbon.dev). Questions and ideas:
