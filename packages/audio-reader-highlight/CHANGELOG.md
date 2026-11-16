@@ -3,6 +3,15 @@
 All notable changes to `audio-reader-highlight` are recorded here. This project follows
 [Semantic Versioning](https://semver.org/).
 
+## 2.1.2 — 2026-11-16
+
+### Fixed
+
+- `configure()` no longer restarts the current word for settings that don't
+  change the voice. Toggling `follow` (auto-scroll) mid-read, or setting a
+  value to what it already is, now applies silently; a new rate, pitch,
+  volume or voice still applies from the current word.
+
 ## 2.1.1 — 2026-11-16
 
 ### Added

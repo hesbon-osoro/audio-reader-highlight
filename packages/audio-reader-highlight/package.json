@@ -1,6 +1,6 @@
 {
   "name": "audio-reader-highlight",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Read-aloud that highlights the exact word being spoken, on the web and in React Native, and reads science, units, currencies and abbreviations naturally.",
   "license": "MIT",
   "author": {

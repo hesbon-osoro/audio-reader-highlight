@@ -216,9 +216,15 @@ export class NativeReader {
   }
 
   configure(settings: Partial<NativeSettings>) {
-    this.set({ settings: { ...this.state.settings, ...settings } });
-    // Pick up the new rate or voice from the current word.
-    if (this.state.status === 'playing' && !this.state.announcing)
+    const before = this.state.settings;
+    const next = { ...before, ...settings };
+    this.set({ settings: next });
+    // Pick up a new rate or voice from the current word; an unchanged value
+    // doesn't interrupt the voice.
+    const changed = (Object.keys(next) as (keyof NativeSettings)[]).some(
+      k => next[k] !== before[k]
+    );
+    if (changed && this.state.status === 'playing' && !this.state.announcing)
       this.speakSentence(this.state.sentence, this.cursor);
   }
 
