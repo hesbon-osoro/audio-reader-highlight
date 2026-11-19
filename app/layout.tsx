@@ -10,6 +10,7 @@ import RegisterSW from '@/components/RegisterSW';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import AnalyticsEvents from '@/components/analytics/AnalyticsEvents';
 import { GA_ID, analyticsEnabled } from '@/lib/analytics';
+import { SITE_URL } from '@/lib/site';
 
 const sans = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const serif = Newsreader({
@@ -26,12 +27,8 @@ export const viewport: Viewport = {
   ],
 };
 
-const siteUrl =
-  (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SITE_URL) ||
-  'http://localhost:3000';
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Audio Reader Highlight',
     template: '%s · Audio Reader Highlight',
