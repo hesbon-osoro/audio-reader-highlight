@@ -1,10 +1,12 @@
 import {
   AudioLines,
+  BookOpen,
   FlaskConical,
   MousePointerClick,
   Package,
 } from 'lucide-react';
 import LabCard from '@/components/lab/LabCard';
+import CopyButton from '@/components/CopyButton';
 import {
   ListenButton,
   PlayerDock,
@@ -46,11 +48,13 @@ const post = {
 const snippets = [
   {
     title: 'Install',
+    slug: 'install',
     body: 'From npm, with any package manager.',
     code: `npm install audio-reader-highlight`,
   },
   {
     title: 'React',
+    slug: 'react',
     body: 'Wrap what should be read; add the player once.',
     code: `import { Readable, PlayerDock } from 'audio-reader-highlight/react';
 import 'audio-reader-highlight/styles.css';
@@ -63,6 +67,7 @@ import 'audio-reader-highlight/styles.css';
   },
   {
     title: 'Any framework',
+    slug: 'any-framework',
     body: 'The engine works on plain DOM, in a WebView too.',
     code: `import { getReader } from 'audio-reader-highlight';
 import 'audio-reader-highlight/styles.css';
@@ -91,10 +96,24 @@ export default function Page() {
           way a person would, and highlights the exact word as it is said.
         </p>
         <div className="hero-actions">
-          <ListenButton region="article" className="btn btn-primary">
-            Listen to the essay
-          </ListenButton>
-          <a className="btn btn-ghost" href="#lab">
+          {/* ListenButton takes no extra props; the wrapper carries the tracking. */}
+          <span
+            className="track-wrap"
+            data-track="click_cta"
+            data-track-cta="listen"
+            data-track-location="hero"
+          >
+            <ListenButton region="article" className="btn btn-primary">
+              Listen to the essay
+            </ListenButton>
+          </span>
+          <a
+            className="btn btn-ghost"
+            href="#lab"
+            data-track="click_cta"
+            data-track-cta="lab"
+            data-track-location="hero"
+          >
             <FlaskConical size={17} aria-hidden /> Pronunciation lab
           </a>
         </div>
@@ -166,15 +185,48 @@ export default function Page() {
             any framework; React bindings and a themeable stylesheet come with
             it.
           </p>
+          <div className="install-links">
+            <a
+              className="btn btn-ghost"
+              href="https://www.npmjs.com/package/audio-reader-highlight"
+              target="_blank"
+              rel="noreferrer"
+              data-track="click_npm"
+              data-track-location="install"
+            >
+              <Package size={17} aria-hidden /> View on npm
+            </a>
+            <a
+              className="btn btn-ghost"
+              href="https://github.com/hesbon-osoro/audio-reader-highlight#readme"
+              target="_blank"
+              rel="noreferrer"
+              data-track="click_github"
+              data-track-location="install"
+              data-track-target="docs"
+            >
+              <BookOpen size={17} aria-hidden /> Read the docs
+            </a>
+          </div>
         </header>
         <div className="install-grid">
           {snippets.map(s => (
             <div className="install-card" key={s.title}>
               <h3>{s.title}</h3>
               <p>{s.body}</p>
-              <pre>
-                <code>{s.code}</code>
-              </pre>
+              <div className="code-block">
+                <pre>
+                  <code>{s.code}</code>
+                </pre>
+                <CopyButton
+                  text={s.code}
+                  label={`${s.title} snippet`}
+                  data-track={
+                    s.slug === 'install' ? 'copy_install' : 'copy_snippet'
+                  }
+                  data-track-snippet={s.slug}
+                />
+              </div>
             </div>
           ))}
         </div>

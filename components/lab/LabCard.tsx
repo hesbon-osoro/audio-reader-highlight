@@ -43,6 +43,9 @@ export default function LabCard({ unit, n }: { unit: LabUnit; n: number }) {
       <button
         className="lab-toggle"
         aria-expanded={open}
+        data-track="lab_spoken_as"
+        data-track-rule={unit.id}
+        data-track-action={open ? 'close' : 'open'}
         onClick={() => {
           if (!open && reader) setSpoken(reader.transcript(id));
           setOpen(o => !o);
