@@ -641,6 +641,56 @@ main > section {
   tab-size: 2;
 }
 
+/* Lets a wrapper carry data attributes without becoming a layout box. */
+.track-wrap {
+  display: contents;
+}
+
+.install-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.code-block {
+  position: relative;
+}
+
+.code-block pre {
+  padding-right: 52px;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.copy-btn:hover {
+  color: var(--ink);
+  border-color: var(--line-2);
+  background: var(--surface-2);
+}
+
+.copy-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 /* ---- footer -------------------------------------------------------------- */
 
 .site-footer {

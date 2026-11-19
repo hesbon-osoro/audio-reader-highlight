@@ -17,6 +17,8 @@ export default function SiteFooter() {
           <a
             className="btn btn-primary"
             href="https://hesbon.dev/pay?kind=custom"
+            data-track="click_coffee"
+            data-track-location="footer"
             target="_blank"
             rel="noreferrer"
           >
@@ -25,6 +27,8 @@ export default function SiteFooter() {
           <a
             className="btn btn-ghost"
             href="https://able-hearts.org/donate"
+            data-track="click_donate"
+            data-track-location="footer"
             target="_blank"
             rel="noreferrer"
           >
@@ -41,16 +45,28 @@ export default function SiteFooter() {
           </p>
         </div>
         <div className="footer-links">
-          <a href="https://hesbon.dev" target="_blank" rel="noreferrer">
+          <a
+            href="https://hesbon.dev"
+            target="_blank"
+            rel="noreferrer"
+            data-track="click_hesbon_dev"
+            data-track-location="footer"
+          >
             <Globe size={16} aria-hidden /> hesbon.dev
           </a>
-          <a href="mailto:osoro@hesbon.dev">
+          <a
+            href="mailto:osoro@hesbon.dev"
+            data-track="click_email"
+            data-track-location="footer"
+          >
             <Mail size={16} aria-hidden /> osoro@hesbon.dev
           </a>
           <a
             href="https://github.com/hesbon-osoro/audio-reader-highlight"
             target="_blank"
             rel="noreferrer"
+            data-track="click_github"
+            data-track-location="footer"
           >
             <Github size={16} aria-hidden /> Star on GitHub
           </a>

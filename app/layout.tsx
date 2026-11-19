@@ -7,6 +7,9 @@ import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { themeScript } from '@/components/ThemeToggle';
 import RegisterSW from '@/components/RegisterSW';
+import { GoogleAnalytics } from '@next/third-parties/google';
+import AnalyticsEvents from '@/components/analytics/AnalyticsEvents';
+import { GA_ID, analyticsEnabled } from '@/lib/analytics';
 
 const sans = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const serif = Newsreader({
@@ -125,6 +128,12 @@ export default function RootLayout({
         <main>{children}</main>
         <SiteFooter />
         <RegisterSW />
+        {analyticsEnabled() && (
+          <>
+            <GoogleAnalytics gaId={GA_ID} />
+            <AnalyticsEvents />
+          </>
+        )}
       </body>
     </html>
   );
