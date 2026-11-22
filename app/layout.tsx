@@ -64,7 +64,7 @@ export const metadata: Metadata = {
         url: '/images/audio-reader-highlight_cropped.png',
         width: 1200,
         height: 630,
-        alt: 'Audio Reader Highlight preview',
+        alt: 'Audio Reader Highlight: audio bars over a line of words, with one word highlighted',
       },
       {
         url: '/images/audio-reader-highlight.webp',
@@ -94,7 +94,8 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico' },
+      { url: '/favicon.ico', sizes: '16x16 32x32' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
     ],

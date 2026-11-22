@@ -169,7 +169,7 @@ main > section {
 }
 
 .brand img {
-  border-radius: 50%;
+  display: block;
 }
 
 .site-header nav {
@@ -236,6 +236,18 @@ main > section {
 
 .hero {
   padding: clamp(56px, 10vw, 112px) 0 clamp(40px, 6vw, 72px);
+}
+
+/* The animated mark: a highlight sweeps the bars as the word steps along. It
+   is an SVG image with its own CSS, which shows the static icon under
+   prefers-reduced-motion. */
+.hero-mark {
+  display: block;
+  width: clamp(64px, 9vw, 88px);
+  height: auto;
+  margin-bottom: 22px;
+  border-radius: 22%;
+  box-shadow: 0 10px 30px -12px rgb(0 212 255 / 0.45);
 }
 
 .hero h1 {

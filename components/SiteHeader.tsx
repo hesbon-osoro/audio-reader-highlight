@@ -8,7 +8,7 @@ export default function SiteHeader() {
       <div className="wrap site-header-inner">
         <a href="/" className="brand">
           <Image
-            src="/images/audio-reader-highlight-circle.png"
+            src="/logo-animated.svg"
             alt=""
             width={30}
             height={30}
