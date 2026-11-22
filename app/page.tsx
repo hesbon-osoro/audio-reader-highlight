@@ -5,6 +5,7 @@ import {
   MousePointerClick,
   Package,
 } from 'lucide-react';
+import Image from 'next/image';
 import LabCard from '@/components/lab/LabCard';
 import CopyButton from '@/components/CopyButton';
 import {
@@ -83,6 +84,14 @@ export default function Page() {
   return (
     <>
       <section className="hero">
+        <Image
+          src="/logo-animated.svg"
+          alt=""
+          width={88}
+          height={88}
+          className="hero-mark"
+          priority
+        />
         <p className="eyebrow">
           <AudioLines size={15} aria-hidden /> Text-to-speech, word by word
         </p>

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256">
+  <title>Audio Reader Highlight</title>
+  <!--
+    Animated read-aloud mark. A highlight sweeps across the audio bars while the
+    highlighted word steps along the pills in sync: reading and highlighting.
+    Pure SVG + CSS. With prefers-reduced-motion it shows the static icon.
+  -->
+  <style>
+    .hl { opacity: 0; }
+    .b2, .b3, .b4, .w1 { opacity: 1; }
+    @media (prefers-reduced-motion: no-preference) {
+      .b { animation: bar 3.5s linear infinite; }
+      .b0 { animation-delay: -3.5s; }
+      .b1 { animation-delay: -3s; }
+      .b2 { animation-delay: -2.5s; }
+      .b3 { animation-delay: -2s; }
+      .b4 { animation-delay: -1.5s; }
+      .b5 { animation-delay: -1s; }
+      .b6 { animation-delay: -0.5s; }
+      .w0 { animation: word-short 3.5s linear infinite; animation-delay: -3.05s; }
+      .w1 { animation: word-long 3.5s linear infinite; animation-delay: -2.05s; }
+      .w2 { animation: word-short 3.5s linear infinite; animation-delay: -0.55s; }
+    }
+    @keyframes bar {
+      0% { opacity: 0; }
+      5% { opacity: 1; }
+      34% { opacity: 1; }
+      44% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+    @keyframes word-short {
+      0% { opacity: 0; }
+      3% { opacity: 1; }
+      27% { opacity: 1; }
+      30% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+    @keyframes word-long {
+      0% { opacity: 0; }
+      3% { opacity: 1; }
+      41% { opacity: 1; }
+      44% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+  </style>
+  <rect width="64" height="64" rx="14" fill="#05070a"/>
+  <g stroke-width="1.6" fill="none" stroke="#00ff41">
+    <rect x="9" y="17" width="4" height="10" rx="2"/>
+    <rect x="16" y="13" width="4" height="18" rx="2"/>
+    <rect x="23" y="10" width="4" height="24" rx="2"/>
+    <rect x="30" y="14" width="4" height="16" rx="2"/>
+    <rect x="37" y="9" width="4" height="26" rx="2"/>
+    <rect x="44" y="15" width="4" height="14" rx="2"/>
+    <rect x="51" y="18" width="4" height="8" rx="2"/>
+  </g>
+  <g stroke-width="1.6" fill="#00d4ff" stroke="#00d4ff">
+    <rect class="hl b b0" x="9" y="17" width="4" height="10" rx="2"/>
+    <rect class="hl b b1" x="16" y="13" width="4" height="18" rx="2"/>
+    <rect class="hl b b2" x="23" y="10" width="4" height="24" rx="2"/>
+    <rect class="hl b b3" x="30" y="14" width="4" height="16" rx="2"/>
+    <rect class="hl b b4" x="37" y="9" width="4" height="26" rx="2"/>
+    <rect class="hl b b5" x="44" y="15" width="4" height="14" rx="2"/>
+    <rect class="hl b b6" x="51" y="18" width="4" height="8" rx="2"/>
+  </g>
+  <path d="M9 40 H55" stroke="#64748b" stroke-width="1.2" stroke-dasharray="2 2" stroke-linecap="round"/>
+  <g stroke-width="1.6" fill="none" stroke="#64748b">
+    <rect x="8.8" y="45.8" width="12.4" height="8.4" rx="3"/>
+    <rect x="23.8" y="45.8" width="17.4" height="8.4" rx="3"/>
+    <rect x="43.8" y="45.8" width="11.4" height="8.4" rx="3"/>
+  </g>
+  <g stroke-width="1.6" fill="#00d4ff" stroke="#00d4ff">
+    <rect class="hl w0" x="8.8" y="45.8" width="12.4" height="8.4" rx="3"/>
+    <rect class="hl w1" x="23.8" y="45.8" width="17.4" height="8.4" rx="3"/>
+    <rect class="hl w2" x="43.8" y="45.8" width="11.4" height="8.4" rx="3"/>
+  </g>
+</svg>

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./public/logo-animated.svg" width="112" height="112" alt="Audio Reader Highlight logo: a highlight sweeps across audio bars while the highlighted word steps along a line of words">
+</p>
+
 # audio-reader-highlight
 
 Natural text-to-speech with synchronized sentence/word highlighting. Reads currencies, abbreviations, and scientific units naturally using data-driven JSON mappings.

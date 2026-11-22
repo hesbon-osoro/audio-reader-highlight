@@ -1,6 +1,6 @@
 // Offline support: pages are network-first (fresh when online, cached when
 // not); build assets and images are cache-first since their URLs are hashed.
-const CACHE = 'arh-v1';
+const CACHE = 'arh-v2';
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(['/'])));

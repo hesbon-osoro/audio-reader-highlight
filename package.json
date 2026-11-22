@@ -18,7 +18,8 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "prepare": "husky",
-    "build:package": "cd packages/audio-reader-highlight && tsup"
+    "build:package": "cd packages/audio-reader-highlight && tsup",
+    "generate:icons": "node scripts/generate-icons.mjs"
   },
   "author": {
     "name": "Hesbon Osoro",

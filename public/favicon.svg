@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="32" height="32">
+  <title>Audio Reader Highlight</title>
+  <!-- Small-size mark on a 16px grid: five solid bars over three word pills, fewer shapes so it stays legible. -->
+  <rect width="16" height="16" rx="3.5" fill="#05070a"/>
+  <rect x="1" y="4" width="2" height="4" rx="1" fill="#00ff41"/>
+  <rect x="4" y="2" width="2" height="8" rx="1" fill="#00d4ff"/>
+  <rect x="7" y="1" width="2" height="10" rx="1" fill="#00d4ff"/>
+  <rect x="10" y="3" width="2" height="6" rx="1" fill="#00d4ff"/>
+  <rect x="13" y="4" width="2" height="4" rx="1" fill="#00ff41"/>
+  <rect x="1" y="12" width="2" height="3" rx="1" fill="#64748b"/>
+  <rect x="4" y="12" width="8" height="3" rx="1.5" fill="#00d4ff"/>
+  <rect x="13" y="12" width="2" height="3" rx="1" fill="#64748b"/>
+</svg>

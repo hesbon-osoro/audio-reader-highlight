@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512">
+  <title>Audio Reader Highlight</title>
+  <!-- Read-aloud mark: audio bars over word pills. The middle bar group and the word under it are highlighted. -->
+  <rect width="64" height="64" rx="14" fill="#05070a"/>
+  <g stroke-width="1.6">
+    <rect x="9" y="17" width="4" height="10" rx="2" fill="none" stroke="#00ff41"/>
+    <rect x="16" y="13" width="4" height="18" rx="2" fill="none" stroke="#00ff41"/>
+    <rect x="23" y="10" width="4" height="24" rx="2" fill="#00d4ff" stroke="#00d4ff"/>
+    <rect x="30" y="14" width="4" height="16" rx="2" fill="#00d4ff" stroke="#00d4ff"/>
+    <rect x="37" y="9" width="4" height="26" rx="2" fill="#00d4ff" stroke="#00d4ff"/>
+    <rect x="44" y="15" width="4" height="14" rx="2" fill="none" stroke="#00ff41"/>
+    <rect x="51" y="18" width="4" height="8" rx="2" fill="none" stroke="#00ff41"/>
+  </g>
+  <path d="M9 40 H55" stroke="#64748b" stroke-width="1.2" stroke-dasharray="2 2" stroke-linecap="round"/>
+  <g stroke-width="1.6">
+    <rect x="8.8" y="45.8" width="12.4" height="8.4" rx="3" fill="none" stroke="#64748b"/>
+    <rect x="23.8" y="45.8" width="17.4" height="8.4" rx="3" fill="#00d4ff" stroke="#00d4ff"/>
+    <rect x="43.8" y="45.8" width="11.4" height="8.4" rx="3" fill="none" stroke="#64748b"/>
+  </g>
+</svg>

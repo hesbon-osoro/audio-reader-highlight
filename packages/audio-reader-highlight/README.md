@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/hesbon-osoro/audio-reader-highlight/main/public/logo-animated.svg" width="112" height="112" alt="Audio Reader Highlight logo: a highlight sweeps across audio bars while the highlighted word steps along a line of words">
+</p>
+
 # audio-reader-highlight
 
 Read-aloud for the web, iOS and Android that highlights the exact word being spoken, and reads
